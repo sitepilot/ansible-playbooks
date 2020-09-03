@@ -1,0 +1,7 @@
+---
+- name: "sshd: configure SSH server"
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+  notify:
+    - reload sshd

@@ -1,0 +1,11 @@
+---
+- name: "msmtp : install required packages"
+  apt:
+    name: "msmtp"
+    state: present
+
+- name: "msmtp : generate configuration"
+  template:
+    src: msmtp_config.j2
+    dest: /etc/msmtprc
+  notify: restart lshttpd # updates bubblewrap containers

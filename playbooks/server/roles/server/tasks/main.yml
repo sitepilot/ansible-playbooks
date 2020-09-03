@@ -1,0 +1,81 @@
+---
+- include: upgrade.yml
+  tags: "upgrade"
+
+- include: base.yml
+  tags: "base"
+
+- include: sshd.yml
+  tags: "sshd"
+
+- include: config.yml
+  tags: "config"
+
+- include: admin.yml
+  tags: "admin"
+
+- include: firewall.yml
+  tags: "firewall"
+
+- include: lshttpd.yml
+  tags: "lshttpd"
+
+- include: lsphp73.yml
+  tags: "lsphp73"
+
+- include: lsphp74.yml
+  tags: "lsphp74"
+
+- include: caddy.yml
+  tags: "caddy"
+
+- include: composer.yml
+  tags: "composer"
+
+- include: nodejs.yml
+  tags: "nodejs"
+
+- include: mysql.yml
+  tags: "mysql"
+
+- include: redis.yml
+  tags: "redis"
+
+- include: supervisor.yml
+  tags: "supervisor"
+
+- include: restic.yml
+  tags: "restic"
+
+- include: msmtp.yml
+  tags: "msmtp"
+
+- include: fail2ban.yml
+  tags: "fail2ban"
+
+- include: swap.yml
+  tags: "swap"
+
+- include: node-exporter.yml
+  tags: "node-exporter"
+
+- include: phpmyadmin.yml
+  tags: "phpmyadmin"
+
+# ----- Optional ----- #
+
+- include: docker.yml
+  tags: "docker"
+  when: docker_install
+
+- include: wpcli.yml
+  tags: "wpcli"
+  when: wpcli_install
+
+- include: wordmove.yml
+  tags: "wordmove"
+  when: wordmove_install
+
+- include: unattended-upgrades.yml
+  tags: "unattended-upgrades"
+  when: unattended_upgrades_install

@@ -1,0 +1,31 @@
+---
+- hosts: "all"
+  become: true
+  pre_tasks:
+    - name: "site/mount/provision : validate input"
+      assert:
+        that: 
+          - source_site | length > 0
+          - source_user | length > 0
+          - source_host | length > 0
+          - mount_user | length > 0
+  vars:
+    sshfs_path: "/sites/{{ source_site }}"
+    mount_path: "/opt/{{ admin }}/users/{{ mount_user }}/sites/{{ source_site }}-mnt"
+    source_path: "/opt/{{ admin }}/users/{{ source_user }}/sites/{{ source_site }}"
+  tasks:
+    - name: "site/mount/provision : create mount folder"
+      file:
+        state: directory
+        path: "{{ mount_path }}"
+        owner: "{{ mount_user }}"
+        group: "{{ mount_user }}"
+        mode: "0750"
+
+    - name: "site/mount/provision : create fstab entry for site mount '{{ source_site }}' to user '{{ mount_user }}'"
+      mount:
+        path: "{{ mount_path }}"
+        src: "{{ source_user }}@{{ source_host }}:{{ sshfs_path }}"
+        fstype: fuse.sshfs
+        opts: "noauto,user,identityfile=/home/{{ mount_user }}/.ssh/id_rsa,defaults,_netdev,follow_symlinks"
+        state: present

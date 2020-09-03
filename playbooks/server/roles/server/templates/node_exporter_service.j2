@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ admin }}
+Group={{ admin }}
+Type=simple
+ExecStart=/usr/local/bin/node_exporter --web.telemetry-path="/metrics/"
+
+[Install]
+WantedBy=multi-user.target

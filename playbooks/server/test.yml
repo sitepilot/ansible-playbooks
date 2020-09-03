@@ -1,0 +1,116 @@
+---
+- hosts: "all"
+  vars:
+    admin: "sitepilot"
+    #admin_pass: "secret"
+    #hostname: 127.0.0.1
+  tasks:
+    # MySQL Tests
+    - name: "server/test : connect to MySQL as admin"
+      command: "mysql -u {{ admin }} -p{{ admin_pass }} -h 127.0.0.1 -e 'show databases;'"
+      changed_when: false
+
+    # HTTP Checks
+    - name: "server/test : caddy server is running (HTTP)"
+      uri:
+        url: "http://{{ hostname }}"
+        validate_certs: false # caddy will redirect to https
+
+    - name: "server/test : caddy server is running (HTTPS)"
+      uri:
+        url: "https://{{ hostname }}"
+        validate_certs: false
+
+    - name: "server/test : web server is running (HTTP)"
+      uri:
+        url: "http://{{ hostname }}:6080"
+
+    - name: "server/test : web server is running (HTTPS)"
+      uri:
+        url: "https://{{ hostname }}:6443"
+        validate_certs: false
+
+    - name: "server/test : web server admin panel is running (HTTPS)"
+      uri:
+        url: "https://{{ hostname }}:7080"
+        validate_certs: false
+
+    - name: "server/test : phpMyAdmin is available"
+      uri:
+        url: "https://{{ hostname }}/phpmyadmin/"
+        validate_certs: false
+
+    - name: "server/test : health check is available"
+      uri:
+        url: "https://{{ hostname }}/health/"
+        status_code:
+          - 200
+          - 500
+        validate_certs: false
+
+    - name: "server/test : node-exporter is available"
+      uri:
+        url: "https://{{ hostname }}/metrics/"
+        validate_certs: false
+
+    - name: "server/test : check if modsecurity is installed"
+      uri:
+        url: "https://{{ hostname }}/test.sql"
+        status_code:
+          - 403
+        validate_certs: false
+
+    # Other Checks
+    - name: "server/test : fail2ban is installed"
+      command: "fail2ban-client --version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : PHP 7.4 is installed"
+      command: "php74 -v"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : PHP 7.3 is installed"
+      command: "php73 -v"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : WPCLI is installed"
+      command: "wp --version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : Composer is installed"
+      command: "composer --version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : Node.js is installed"
+      command: "node -v"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : NPM is installed"
+      command: "npm -v"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : Wordmove is installed"
+      command: "wordmove --version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : Restic is installed"
+      command: "restic version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false

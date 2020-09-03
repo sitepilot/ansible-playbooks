@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+    - name: "server/connect : pinging server"
+      ping:

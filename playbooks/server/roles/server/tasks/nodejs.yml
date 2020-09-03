@@ -1,0 +1,24 @@
+---
+- name: "nodejs : download repository script"
+  get_url:
+    url: https://deb.nodesource.com/setup_12.x
+    dest: /root/nodejs-install.sh
+    mode: "0700"
+    force: true
+
+- name: "nodejs : install repository"
+  shell: /root/nodejs-install.sh
+
+- name: "nodejs : ensure Node.js and npm are installed"
+  apt:
+    name: "nodejs=12.*"
+    state: present
+
+- name: "nodejs : install npm packages"
+  npm:
+    name: "{{ item }}"
+    global: yes
+    state: present
+  loop:
+    - gulp
+    - yarn

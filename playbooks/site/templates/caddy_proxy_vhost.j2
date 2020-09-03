@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+{{ domain }}{{ ', ' if (domains|length>0) else '' }}{{ domains|join(', ') }} {
+    tls {{ email }} {
+        on_demand
+    }
+
+    import config
+
+    import webapps
+
+    reverse_proxy {
+        to {{ backends | join(' ') }}
+
+        lb_policy first
+        header_down -Server
+
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}

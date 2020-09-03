@@ -1,0 +1,40 @@
+---
+- name: reload sshd
+  service:
+    name: sshd
+    state: reloaded
+
+- name: reload caddy
+  service:
+    name: caddy
+    state: reloaded
+
+- name: reload fail2ban
+  service:
+    name: fail2ban
+    state: reloaded
+
+- name: reload supervisor
+  service:
+    name: supervisor
+    state: reloaded
+
+- name: restart mysql
+  service:
+    name: mysql
+    state: restarted
+
+- name: restart redis
+  service:
+    name: redis
+    state: restarted
+
+- name: restart lshttpd
+  service:
+    name: lshttpd
+    state: restarted
+
+- name: restart node-exporter
+  service:
+    name: node-exporter
+    state: restarted

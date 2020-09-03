@@ -1,0 +1,40 @@
+---
+admin: "sitepilot"
+admin_pass: secret
+
+server_name: "Sitepilot"
+
+root_path: "/opt/sitepilot"
+root_domain: "sitepilot.local"
+
+hostname: "server.sitepilot.local"
+timezone: "Europe/Amsterdam"
+
+admin_email: "server@sitepilot.local"
+health_email: "health@sitepilot.local"
+cert_email: internal
+
+mysql_root_pass: supersecret
+
+swap_path: "/swapfile"
+swap_size: "1G"
+
+php_memory_limit: 256
+php_upload_max_filesize: 32
+php_max_children: 5
+
+smtp_relay_host: "smtp.eu.mailgun.org"
+smtp_relay_domain: "mg.sitepilot.local"
+smtp_relay_user: "postmaster@sitepilot.local"
+smtp_relay_password: "supersecret"
+
+node_exporter_version: 1.0.0
+node_exporter_release_name: "node_exporter-{{ node_exporter_version }}.linux-amd64"
+
+pma_version: 5.0.2
+pma_update: true
+
+wpcli_install: true
+wordmove_install: true
+unattended_upgrades_install: true
+docker_install: false

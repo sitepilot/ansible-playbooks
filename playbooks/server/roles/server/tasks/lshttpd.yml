@@ -1,0 +1,134 @@
+---
+- name: "lshttpd : install repository keys"
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  loop:
+    - http://rpms.litespeedtech.com/debian/lst_repo.gpg
+    - http://rpms.litespeedtech.com/debian/lst_debian_repo.gpg
+
+- name: "lshttpd : install repository"
+  apt_repository:
+    repo: "deb https://rpms.litespeedtech.com/debian/ focal main"
+    state: present
+    mode: "0644"
+
+- name: "lshttpd : install packages"
+  apt:
+    pkg:
+      - openlitespeed
+      - ols-modsecurity
+    state: present
+    update_cache: yes
+  notify: restart lshttpd
+
+- name: "lshttpd : create modsecurity rules folder"
+  file:
+    path: "/usr/local/lsws/cwaf"
+    owner: "lsadm"
+    group: "nogroup"
+    state: directory
+  notify: restart lshttpd
+
+- name: "lshttpd : unpack modsecurity rules"
+  unarchive:
+    src: "{{ role_path }}/files/cwaf_rules.tgz"
+    dest: /usr/local/lsws/cwaf
+    owner: "lsadm"
+    group: "nogroup"
+  notify: restart lshttpd
+
+- name: "lshttpd : generate httpd configuration"
+  template:
+    src: lshttpd_httpd_config.j2
+    dest: /usr/local/lsws/conf/httpd_config.conf
+    owner: "lsadm"
+    group: "nogroup"
+    mode: "0644"
+  notify:
+    - restart lshttpd
+
+- name: "lshttpd : generate default vhost configuration"
+  template:
+    src: lshttpd_default_vhost.j2
+    dest: /usr/local/lsws/conf/vhosts/default.conf
+    owner: "lsadm"
+    group: "nogroup"
+    mode: "0644"
+  notify:
+    - restart lshttpd
+
+- name: "lshttpd : create default vhost folders"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default/public"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default/public/health"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default/logs"
+      mode: "0750"
+      owner: "{{ admin }}"
+  notify:
+    - restart lshttpd
+
+- name: "lshttpd : check if default index.php exists"
+  stat:
+    path: "{{ root_path }}/users/{{ admin }}/sites/default/public/index.php"
+  register: default_index
+
+- name: "lshttpd : generate default index page"
+  template:
+    src: lshttpd_default_index.j2
+    dest: "{{ root_path }}/users/{{ admin }}/sites/default/public/index.php"
+    owner: "{{ admin }}"
+    group: "{{ admin }}"
+    mode: "0644"
+  when: not default_index.stat.exists
+
+- name: "lshttpd : generate health index page"
+  template:
+    src: lshttpd_health_index.j2
+    dest: "{{ root_path }}/users/{{ admin }}/sites/default/public/health/index.php"
+    owner: "{{ admin }}"
+    group: "{{ admin }}"
+    mode: "0644"
+
+- name: "lshttpd : generate admin password script"
+  template:
+    src: lshttpd_password.j2
+    dest: /root/lshttpd-password.sh
+    mode: "a+x"
+
+- name: "lshttpd : set admin password"
+  command: "/root/lshttpd-password.sh {{ admin }} {{ admin_pass }}"
+  changed_when: false
+
+- name: "lshttpd : generate reload script"
+  template:
+    src: "lshttpd_reload.j2"
+    dest: "/usr/local/lsws/bin/lshttpd-auto-reload"
+    owner: "root"
+    group: "root"
+    mode: "0700"
+
+- name: "lshttpd : configure reload cron"
+  cron:
+    name: "auto reload lshttpd"
+    minute: "*"
+    job: "/usr/local/lsws/bin/lshttpd-auto-reload > /dev/null"
+
+- name: "lshttpd : enable on startup"
+  service:
+    name: lshttpd
+    enabled: true
+    state: started

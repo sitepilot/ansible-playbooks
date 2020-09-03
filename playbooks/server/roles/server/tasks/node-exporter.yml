@@ -1,0 +1,37 @@
+---
+- name: "node-exporter : download node exporter binary"
+  get_url:
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/{{ node_exporter_release_name }}.tar.gz"
+    dest: "/tmp/{{ node_exporter_release_name }}.tar.gz"
+  notify: restart node-exporter
+
+- name: "node-exporter : unarchive node exporter binary"
+  unarchive:
+    copy: no
+    src: "/tmp/{{ node_exporter_release_name }}.tar.gz"
+    dest: "/tmp"
+    creates: "/tmp/{{ node_exporter_release_name }}/node_exporter"
+  notify: restart node-exporter
+
+- name: "node-exporter : move binary to /usr/local/bin/node_exporter"
+  command: mv /tmp/{{ node_exporter_release_name }}/node_exporter /usr/local/bin/node_exporter
+
+- name: "node-exporter : generate service configuration"
+  template:
+    src: node_exporter_service.j2
+    dest: /etc/systemd/system/node-exporter.service
+  notify: restart node-exporter
+
+- name: "node-exporter : enable on startup"
+  systemd:
+    name: node-exporter
+    daemon_reload: yes
+    enabled: yes
+
+- name: "node-exporter : cleanup downloaded files"
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/{{ node_exporter_release_name }}.tar.gz
+    - /tmp/{{ node_exporter_release_name }}

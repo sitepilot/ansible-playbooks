@@ -1,0 +1,44 @@
+---
+- name: "caddy : add repository"
+  copy:
+    dest: "/etc/apt/sources.list.d/caddy-fury.list"
+    content: |
+      deb [trusted=yes] https://apt.fury.io/caddy/ /
+    mode: "0644"
+
+- name: "caddy : install packages"
+  apt:
+    pkg:
+      - caddy
+    state: present
+    update_cache: yes
+  notify: reload caddy
+
+- name: "caddy : create folders"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "caddy"
+    group: "caddy"
+    mode: "0700"
+  loop:
+    - /etc/caddy/vhosts
+
+- name: "caddy : add caddy user to sudo group"
+  user:
+    name: "caddy"
+    groups: sudo
+    append: yes
+
+- name: "caddy : generate config"
+  template:
+    src: caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    mode: "0644"
+  notify: reload caddy
+
+- name: "caddy : enable on startup"
+  service:
+    name: caddy
+    enabled: true
+    state: started

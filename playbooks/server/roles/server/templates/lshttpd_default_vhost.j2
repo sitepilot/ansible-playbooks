@@ -1,0 +1,52 @@
+# {{ ansible_managed }}
+virtualHost default {
+    user                      {{ admin }}
+    group                     {{ admin }}
+    listeners                 http, https
+
+    vhRoot                    {{ root_path }}/users/{{ admin }}/sites/default
+    docRoot                   $VH_ROOT/public
+
+    allowSymbolLink           1
+    enableScript              1
+    restrained                1
+    setUIDMode                2
+
+    vhDomain                  *
+    vhAliases                 
+
+    adminEmails               admin@server
+    
+    enableGzip                1
+    enableIpGeo               1
+    
+    errorlog {{ root_path }}/users/{{ admin }}/sites/default/logs/error.log {
+        useServer               0
+        logLevel                NOTICE
+        rollingSize             0
+    }
+
+    accesslog {{ root_path }}/users/{{ admin }}/sites/default/logs/access.log {
+        useServer               0
+        logFormat               %a %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"
+        logHeaders              5
+        rollingSize             0
+    }
+
+    scripthandler  {
+        add                     lsapi:lsphp74 inc
+        add                     lsapi:lsphp74 php
+        add                     lsapi:lsphp74 phtml
+        add                     lsapi:lsphp74 php74
+    }
+
+    phpIniOverride  {
+        php_admin_value mail.log "$VH_ROOT/logs/php-mail.log"
+        php_admin_value error_log "$VH_ROOT/logs/php-error.log"
+    }
+
+    rewrite  {
+        enable                  1
+        autoLoadHtaccess        1
+    }
+}

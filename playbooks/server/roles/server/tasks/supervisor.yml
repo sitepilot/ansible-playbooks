@@ -1,0 +1,14 @@
+---
+- name: "supervisor : install packages"
+  apt:
+    pkg:
+      - supervisor
+    state: present
+    update_cache: no
+  notify: reload supervisor
+
+- name: "supervisor : enable on startup"
+  service:
+    name: supervisor
+    enabled: true
+    state: started

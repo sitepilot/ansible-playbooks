@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+(config) {
+	header Server "{{ server_name }}"
+}
+
+(webapps) {
+	# nothing here yet
+}
+
+{{ hostname }} localhost {
+	tls {{ cert_email }} {
+        on_demand
+    }
+
+    import config
+
+    import webapps
+
+    reverse_proxy /metrics* http://127.0.0.1:9100
+
+	reverse_proxy {
+        to https://127.0.0.1:6443
+        header_down -Server
+
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+import /etc/caddy/vhosts/*.conf

@@ -1,0 +1,42 @@
+---
+- name: "lsphp74 : install packages"
+  apt:
+    pkg:
+      - lsphp74
+      - lsphp74-common
+      - lsphp74-curl
+      - lsphp74-dbg
+      - lsphp74-dev
+      - lsphp74-igbinary
+      - lsphp74-imagick
+      - lsphp74-imap
+      - lsphp74-intl
+      - lsphp74-ioncube
+      - lsphp74-json
+      - lsphp74-mysql
+      - lsphp74-opcache
+      - lsphp74-redis
+    state: present
+    update_cache: no
+  notify: restart lshttpd
+
+- name: "lsphp74 : generate ini configuration"
+  template:
+    src: php_ini_config.j2
+    dest: "/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/10-{{ admin }}.ini"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: restart lshttpd
+
+- name: "lsphp74 : create php74 symbolic link"
+  file:
+    src: /usr/local/lsws/lsphp74/bin/php
+    dest: /usr/local/bin/php74
+    state: link
+
+- name: "lsphp74 : create php symbolic link"
+  file:
+    src: /usr/local/lsws/lsphp74/bin/php
+    dest: /usr/local/bin/php
+    state: link

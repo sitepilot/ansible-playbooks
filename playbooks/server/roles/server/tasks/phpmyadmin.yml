@@ -1,0 +1,52 @@
+---
+- name: "phpmyadmin : prepare variables"
+  set_fact:
+    pma_path: "{{ root_path }}/users/{{ admin }}/sites/default/public/phpmyadmin"
+    pma_blowfish_secret: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters') }}"
+
+- name: "phpmyadmin : remove folders"
+  file:
+    path: "{{ pma_path }}"
+    state: absent
+  when:
+    - pma_update_version is defined
+    - pma_update_version|bool
+
+- name: "phpmyadmin : create folders"
+  file:
+    path: "{{ pma_path }}"
+    owner: "{{ admin }}"
+    group: "{{ admin }}"
+    state: directory
+    mode: "0755"
+
+- name: "phpmyadmin : check if already installed"
+  stat:
+    path: "{{ pma_path }}/index.php"
+  register: pma_index
+
+- name: "phpmyadmin : download v{{ pma_version }} archive"
+  get_url:
+    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-all-languages.tar.gz"
+    dest: "/tmp/phpmyadmin.zip"
+  when: not pma_index.stat.exists
+
+- name: "phpmyadmin : extract phpMyAdmin archive"
+  unarchive:
+    src: /tmp/phpmyadmin.zip
+    dest: "{{ pma_path }}"
+    remote_src: true
+    extra_opts: [--strip-components=1]
+  when: not pma_index.stat.exists
+
+- name: "phpmyadmin : write configuration"
+  template:
+    src: pma_config.j2
+    dest: "{{ pma_path }}/config.inc.php"
+  when: not pma_index.stat.exists
+
+- name: "phpmyadmin : set folder / file permissions"
+  command: "{{ item }}"
+  loop:
+    - "find {{ pma_path }} -type f -exec chmod 644 {} +"
+    - "find {{ pma_path }} -type d -exec chmod 755 {} +"

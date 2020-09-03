@@ -1,0 +1,38 @@
+---
+- name: "docker : add Docker signing keys"
+  apt_key:
+    url: "{{ item }}"
+    state: present
+  loop:
+    - https://download.docker.com/linux/ubuntu/gpg
+
+- name: "docker : install Docker repositories"
+  apt_repository:
+    repo: "{{ item }}"
+    mode: "0644"
+  loop:
+    - "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+
+- name: "docker : install Docker CE"
+  apt:
+    name: docker-ce
+
+- name: "docker : install Docker python packages"
+  pip:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker
+    - docker-compose
+
+- name: "docker : enable Docker on startup"
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: "docker : add user '{{ admin }}' to Docker group"
+  user:
+    name: "{{ admin }}"
+    groups: docker
+    append: true

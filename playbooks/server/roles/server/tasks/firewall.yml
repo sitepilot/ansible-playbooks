@@ -1,0 +1,21 @@
+---
+- name: "firewall : install required packages"
+  apt:
+    name: "ufw"
+    state: present
+
+- name: "firewall : create firewall rules"
+  ufw:
+    port: "{{ item.port }}"
+    comment: "{{ item.comment }}"
+    rule: allow
+    state: enabled
+  loop:
+    - port: 80
+      comment: "http"
+    - port: 443
+      comment: "https"
+    - port: 22
+      comment: "ssh"
+    - port: 7080
+      comment: "litespeed admin"

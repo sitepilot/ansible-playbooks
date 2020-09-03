@@ -1,0 +1,27 @@
+version: "3.3"
+
+services:
+  test-web:
+    image: sitepilot/autopilot-test:20.04
+    container_name: test-server
+    restart: always
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "8222:22"
+      - "8080:80"
+      - "8443:443"
+      - "8070:7080"
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    networks:
+      testing_net:
+        ipv4_address: ${TEST_WEB_IP:-172.25.1.1}
+
+networks:
+  testing_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16

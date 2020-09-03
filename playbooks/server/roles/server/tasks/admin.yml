@@ -1,0 +1,62 @@
+---
+- name: "admin : ensure '{{ admin }}' user exists"
+  user:
+    name: "{{ admin }}"
+    password: "{{ admin_pass | password_hash('sha512') }}"
+    groups: sudo,www-data
+
+- name: "admin : setup bash for '{{ admin }}'"
+  command: "chsh -s /bin/bash {{ admin }}"
+  changed_when: false
+
+- name: "admin : create folders"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ root_path }}/users/{{ admin }}"
+      mode: "0750"
+      owner: "root"
+    - path: "{{ root_path }}/users/{{ admin }}/sites"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "/home/{{ admin }}/.ssh"
+      mode: "0700"
+      owner: "{{ admin }}"
+
+- name: "admin : setup ACL"
+  acl:
+    path: "{{ root_path }}/users/{{ admin }}"
+    entity: "{{ item.entity }}"
+    etype: "{{ item.etype }}"
+    permissions: "{{ item.permissions }}"
+    default: "{{ item.default }}"
+    recursive: yes
+    state: present
+  loop:
+    - entity: "{{ admin }}" # allow admin group to read files
+      etype: group
+      permissions: rx
+      default: no
+      recursive: yes
+    - entity: "{{ admin }}"
+      etype: group
+      permissions: rx
+      default: yes
+      recursive: yes
+
+- name: "admin : create symlink to sites folder"
+  file:
+    src: "{{ root_path }}/users/{{ admin }}/sites"
+    dest: "/home/{{ admin }}/sites"
+    state: link
+
+- name: "admin : generate SSH keypair"
+  openssh_keypair:
+    path: /home/{{ admin }}/.ssh/id_rsa
+    owner: "{{ admin }}"
+    group: "{{ admin }}"
+    comment: "{{ admin }}@{{ hostname }}"

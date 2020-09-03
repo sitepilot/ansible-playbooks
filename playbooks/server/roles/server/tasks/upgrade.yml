@@ -1,0 +1,6 @@
+---
+- name: "upgrade : upgrade packages to the latest version"
+  apt:
+    upgrade: dist
+    force_apt_get: true
+    update_cache: true

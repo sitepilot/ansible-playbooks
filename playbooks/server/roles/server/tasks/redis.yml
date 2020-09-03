@@ -1,0 +1,14 @@
+---
+- name: "redis : install packages"
+  apt:
+    pkg:
+      - redis-server
+    state: present
+    update_cache: no
+  notify: restart redis
+
+- name: "redis : enable on startup"
+  service:
+    name: redis
+    enabled: true
+    state: started

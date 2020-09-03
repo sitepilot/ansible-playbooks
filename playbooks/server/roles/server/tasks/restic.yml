@@ -1,0 +1,26 @@
+---
+- name: "restic : install required packages"
+  apt:
+    name: >
+      restic
+    state: present
+
+- name: "restic : setup bash environment"
+  lineinfile:
+    path: /root/.bashrc
+    regexp: "^export {{ item.variable }}="
+    line: "export {{ item.variable }}={{ item.value }}"
+  loop:
+    - variable: AWS_ACCESS_KEY_ID
+      value: "{{ backup_s3_key }}"
+    - variable: AWS_SECRET_ACCESS_KEY
+      value: "{{ backup_s3_secret }}"
+    - variable: RESTIC_PASSWORD
+      value: "{{ backup_password }}"
+  when:
+    - backup_s3_key is defined
+    - backup_s3_key | length > 0
+    - backup_s3_secret is defined
+    - backup_s3_secret | length > 0
+    - backup_password is defined
+    - backup_password | length > 0

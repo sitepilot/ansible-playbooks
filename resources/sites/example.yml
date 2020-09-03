@@ -1,0 +1,7 @@
+---
+user: "{{ admin }}"
+site: example
+php_version: 74
+domain: example.test
+domains: []
+email: internal

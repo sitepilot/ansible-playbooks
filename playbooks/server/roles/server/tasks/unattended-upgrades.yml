@@ -1,0 +1,23 @@
+---
+- name: "unattended-upgrades : install packages"
+  apt:
+    pkg:
+      - unattended-upgrades
+    state: present
+    update_cache: no
+
+- name: "unattended-upgrades : generate configuration"
+  template:
+    src: unattended_upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "unattended-upgrades : generate periodic configuration"
+  template:
+    src: unattended_periodic.j2
+    dest: /etc/apt/apt.conf.d/10periodic
+    owner: "root"
+    group: "root"
+    mode: "0644"

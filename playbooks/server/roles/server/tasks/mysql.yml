@@ -1,0 +1,91 @@
+---
+- name: "mysql : install packages"
+  apt:
+    pkg:
+      - mysql-server
+    state: present
+    update_cache: no
+  notify: restart mysql
+
+- name: "mysql : install python packages"
+  pip:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - PyMySQL
+
+- name: "mysql : generate mysqld configuration"
+  template:
+    src: mysql_mysqld_config.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: restart mysql
+
+- name: "mysql : enable on startup"
+  service:
+    name: mysql
+    enabled: true
+    state: started
+
+- name: "mysql : set root user password"
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_pass }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    update_password: always
+  no_log: true
+
+- name: "mysql : copy .my.cnf file with root password credentials"
+  template:
+    src: mysql_my_cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+  vars:
+    mysql_user: root
+    mysql_password: "{{ mysql_root_pass }}"
+
+- name: "mysql : delete anonymous MySQL server users"
+  mysql_user:
+    user: ""
+    host: "{{ item }}"
+    state: absent
+  no_log: true
+  with_items:
+    - "%"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: "mysql : remove the test database"
+  mysql_db:
+    name: test
+    state: absent
+
+- name: "mysql : ensure '{{ admin }}' user has admin rights"
+  mysql_user:
+    name: "{{ admin }}"
+    password: "{{ admin_pass }}"
+    priv: "*.*:ALL,GRANT"
+    state: present
+    host: "%"
+    config_file: "/root/.my.cnf"
+  register: result
+  retries: 8
+  delay: 10
+  until: result is not failed
+  no_log: true
+
+- name: "mysql : copy .my.cnf file with '{{ admin }}' credentials"
+  template:
+    src: "mysql_my_cnf.j2"
+    dest: "/home/{{ admin }}/.my.cnf"
+    owner: "{{ admin }}"
+    group: "{{ admin }}"
+    mode: "0600"
+  vars:
+    mysql_user: "{{ admin }}"
+    mysql_password: "{{ admin_pass }}"

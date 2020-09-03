@@ -1,0 +1,20 @@
+---
+- name: "fail2ban : install packages"
+  apt:
+    pkg:
+      - fail2ban
+    state: present
+    update_cache: no
+  notify: reload fail2ban
+
+- name: "fail2ban : generate filter configuration"
+  template:
+    src: fail2ban_wp_filter.j2
+    dest: /etc/fail2ban/filter.d/wordpress.conf
+  notify: reload fail2ban
+
+- name: "fail2ban : enable on startup"
+  service:
+    name: mysql
+    enabled: true
+    state: started
