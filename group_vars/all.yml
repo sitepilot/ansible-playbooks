@@ -1,17 +1,17 @@
 ---
-admin: "sitepilot"
+admin: "autopilot"
 admin_pass: secret
 
-server_name: "Sitepilot"
+server_name: "Autopilot"
 
-root_path: "/opt/sitepilot"
-root_domain: "sitepilot.local"
+root_path: "/opt/{{ admin }}"
+root_domain: "autopilot.local"
 
-hostname: "server.sitepilot.local"
+hostname: "server.{{ root_domain }}"
 timezone: "Europe/Amsterdam"
 
-admin_email: "server@sitepilot.local"
-health_email: "health@sitepilot.local"
+admin_email: "server@{{ root_domain }}"
+health_email: "health@{{ root_domain }}"
 cert_email: internal
 
 mysql_root_pass: supersecret
@@ -24,8 +24,8 @@ php_upload_max_filesize: 32
 php_max_children: 5
 
 smtp_relay_host: "smtp.eu.mailgun.org"
-smtp_relay_domain: "mg.sitepilot.local"
-smtp_relay_user: "postmaster@sitepilot.local"
+smtp_relay_domain: "mg.{{ root_domain }}"
+smtp_relay_user: "postmaster@{{ root_domain }}"
 smtp_relay_password: "supersecret"
 
 node_exporter_version: 1.0.0
