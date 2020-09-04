@@ -22,7 +22,7 @@
 - name: reload fail2ban
   service:
     name: fail2ban
-    state: reloade
+    state: reloaded
   when: install_fail2ban | bool
 
 - name: restart mysql
