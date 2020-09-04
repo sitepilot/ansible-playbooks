@@ -1,0 +1,41 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  vars:
+    user_path: "/opt/{{ admin }}/users/{{ user_name }}"
+  tasks:
+    - name: "user/destroy : {{ user_name }} : install required pip packages"
+      pip:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - PyMySQL
+
+    - name: "user/destroy : {{ user_name }} : remove user"
+      user:
+        name: "{{ user_name }}"
+        state: absent
+        force: true
+
+    - name: "user/destroy : {{ user_name }} : remove user group"
+      group:
+        name: "{{ user_name }}"
+        state: absent
+
+    - name: "user/destroy : {{ user_name }} : remove user folders"
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "/home/{{ user_name }}"
+        - "{{ user_path }}"
+
+    - name: "user/destroy : {{ user_name }} : remove database user"
+      mysql_user:
+        name: "{{ user_name }}"
+        state: absent
+        config_file: "/root/.my.cnf"
+        host: "%"
+      no_log: true

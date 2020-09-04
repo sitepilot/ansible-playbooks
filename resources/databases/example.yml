@@ -1,0 +1,5 @@
+---
+host: "server"
+database_name: "{{ admin }}_db123"
+database_user: "{{ admin }}_u1234"
+database_password: "supersecret"

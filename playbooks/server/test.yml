@@ -1,9 +1,6 @@
 ---
 - hosts: "all"
-  vars:
-    admin: "sitepilot"
-    #admin_pass: "secret"
-    #hostname: 127.0.0.1
+  become: true
   tasks:
     # MySQL Tests
     - name: "server/test : connect to MySQL as admin"
@@ -39,6 +36,7 @@
       uri:
         url: "https://{{ hostname }}/phpmyadmin/"
         validate_certs: false
+      when: install_phpmyadmin
 
     - name: "server/test : health check is available"
       uri:
@@ -52,6 +50,7 @@
       uri:
         url: "https://{{ hostname }}/metrics/"
         validate_certs: false
+      when: install_node_exporter
 
     - name: "server/test : check if modsecurity is installed"
       uri:
@@ -66,6 +65,7 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
+      when: install_fail2ban
 
     - name: "server/test : PHP 7.4 is installed"
       command: "php74 -v"
@@ -84,6 +84,7 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
+      when: install_wpcli
 
     - name: "server/test : Composer is installed"
       command: "composer --version"
@@ -108,9 +109,16 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
+      when: install_wordmove
 
     - name: "server/test : Restic is installed"
       command: "restic version"
+      become: true
+      become_user: "{{ admin }}"
+      changed_when: false
+
+    - name: "server/test : Docker is installed"
+      command: "docker --version && docker ps"
       become: true
       become_user: "{{ admin }}"
       changed_when: false

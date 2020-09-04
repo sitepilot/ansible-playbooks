@@ -1,0 +1,9 @@
+---
+host: "server"
+user_name: "testuser"
+user_full_name: "Test User"
+user_password: "secret"
+user_mysql_password: "supersecret"
+user_isolated: true
+user_private_key: "test"
+user_public_key: "test"

@@ -1,0 +1,132 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  vars:
+    user_path: "/opt/{{ admin }}/users/{{ user_name }}"
+  tasks:
+    - name: "user/provision : {{ user_name }} : ensure 'isolated' group exists"
+      group:
+        name: "isolated"
+        state: present
+
+    - name: "user/provision : {{ user_name }} : install required pip packages"
+      pip:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - PyMySQL
+
+    - name: "user/provision : {{ user_name }} : ensure user exists"
+      user:
+        name: "{{ user_name }}"
+        groups: "isolated"
+        shell: "/bin/bash"
+        password: "{{ user_password | password_hash('sha512') }}"
+        comment: "{{ user_full_name if (user_full_name is defined) and (user_full_name|length > 0) else user }}"
+
+    - name: "user : {{ user_name }} : remove isolated group"
+      user:
+        name: "{{ user_name }}"
+        groups: ""
+      when:
+        - user_isolated is defined
+        - not user_isolated
+
+    - name: "user/provision : {{ user_name }} : create folders"
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner }}"
+        group: "{{ item.owner }}"
+        mode: "{{ item.mode }}"
+      loop:
+        - path: "{{ user_path }}"
+          owner: "root"
+          mode: "0750"
+        - path: "{{ user_path }}/sites"
+          owner: "{{ user_name }}"
+          mode: "0750"
+        - path: "/home/{{ user_name }}/.ssh/"
+          owner: "{{ user_name }}"
+          mode: "0700"
+
+    - name: "user : {{ user_name }} : setup ACL"
+      acl:
+        path: "{{ user_path }}"
+        entity: "{{ item.entity }}"
+        etype: "{{ item.etype }}"
+        permissions: "{{ item.permissions }}"
+        default: "{{ item.default }}"
+        recursive: "{{ item.recursive }}"
+        state: present
+      loop:
+        - entity: "{{ user_name }}" # allow user to read files
+          etype: group
+          permissions: rx
+          default: no
+          recursive: no
+        - entity: "{{ admin }}" # allow admin group to read files
+          etype: group
+          permissions: rx
+          default: no
+          recursive: yes
+        - entity: "{{ admin }}"
+          etype: group
+          permissions: rx
+          default: yes
+          recursive: yes
+
+    - name: "user/provision : {{ user_name }} : create symlink to sites folder"
+      file:
+        src: "{{ user_path }}/sites"
+        dest: "/home/{{ user_name }}/sites"
+        state: link
+
+    - name: "user/provision : {{ user_name }} : set home dir permission"
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: "0700"
+      loop:
+        - "/home/{{ user_name }}"
+
+    - name: "user : {{ user_name }} : create database user"
+      mysql_user:
+        name: "{{ user_name }}"
+        password: "{{ user_mysql_password }}"
+        priv: "{{ user_name }}_%.*:SELECT,INSERT,UPDATE,DELETE,INDEX,ALTER,CREATE,CREATE TEMPORARY TABLES,EXECUTE,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,EVENT,TRIGGER,DROP"
+        state: present
+        host: "%"
+        config_file: "/root/.my.cnf"
+      when:
+        - user_mysql_password is defined
+        - user_mysql_password | length > 0
+      no_log: true
+
+    - name: "user : {{ user_name }} : save private key"
+      copy:
+        content: "{{ user_private_key }}"
+        dest: "/home/{{ user_name }}/.ssh/id_rsa"
+        force: yes
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: "0600"
+      when:
+        - user_private_key is defined
+        - user_private_key | length > 0
+
+    - name: "user : {{ user_name }} : save public key"
+      copy:
+        content: "{{ user_public_key }}"
+        dest: "/home/{{ user_name }}/.ssh/id_rsa.pub"
+        force: yes
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: "0600"
+      when:
+        - user_public_key is defined
+        - user_public_key | length > 0

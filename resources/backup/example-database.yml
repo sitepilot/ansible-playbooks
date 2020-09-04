@@ -1,0 +1,6 @@
+---
+host: "server"
+backup_tags:
+  - "test-db-backup"
+backup_user: "{{ admin }}"
+backup_database_name: "{{ admin }}_db123"

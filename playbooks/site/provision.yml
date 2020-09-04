@@ -1,27 +1,17 @@
 ---
-- hosts: "all"
+- hosts: "{{ host }}"
   become: true
   pre_tasks:
-    - name: "site/provision : validate input"
-      assert:
-        that: 
-          - admin | length > 3
-          - admin | length < 32
-          - user | length > 3
-          - user | length < 32
-          - site | length > 3 
-          - site | length < 32
-          - php_version == 74 or php_version == 73
-          - domains is defined
+    - import_tasks: validation.yml
   vars:
-    backends:
+    site_backends:
       - 127.0.0.1
-    path: "/opt/{{ admin }}/users/{{ user }}/sites/{{ site }}"
-    path_vhost: "/usr/local/lsws/conf/vhosts/{{ site }}.conf"
-    path_proxy: "/etc/caddy/vhosts/{{ site }}.conf"
-    path_fail2ban: "/etc/fail2ban/jail.d/{{ site }}.conf"
+    site_path: "/opt/{{ admin }}/users/{{ site_user }}/sites/{{ site_name }}"
+    site_path_vhost: "/usr/local/lsws/conf/vhosts/{{ site_name }}.conf"
+    site_path_proxy: "/etc/caddy/vhosts/{{ site_name }}.conf"
+    site_path_fail2ban: "/etc/fail2ban/jail.d/{{ site_name }}.conf"
   tasks:
-    - name: "site/provision : {{ user }} : {{ site }} : create folders"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : create folders"
       file:
         path: "{{ item.path }}"
         state: directory
@@ -29,51 +19,53 @@
         group: "{{ item.owner }}"
         mode: "{{ item.mode }}"
       loop:
-        - path: "{{ path }}"
-          owner: "{{ user }}"
+        - path: "{{ site_path }}"
+          owner: "{{ site_user }}"
           mode: "0750"
-        - path: "{{ path }}/public"
-          owner: "{{ user }}"
+        - path: "{{ site_path }}/public"
+          owner: "{{ site_user }}"
           mode: "0750"
-        - path: "{{ path }}/logs"
-          owner: "{{ user }}"
+        - path: "{{ site_path }}/logs"
+          owner: "{{ site_user }}"
           mode: "0750"
 
-    - name: "site/provision : {{ user }} : {{ site }} : generate vhost configuration"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : generate vhost configuration"
       template:
         src: ./templates/lshttpd_vhost.j2
-        dest: "{{ path_vhost }}"
+        dest: "{{ site_path_vhost }}"
         owner: "lsadm"
         group: "nogroup"
         mode: "0644"
 
-    - name: "site/provision : {{ user }} : {{ site }} : generate proxy vhost"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : generate proxy vhost"
       template:
         src: ./templates/caddy_proxy_vhost.j2
-        dest: "{{ path_proxy }}"
+        dest: "{{ site_path_proxy }}"
         owner: "caddy"
         group: "caddy"
         mode: "0644"
 
-    - name: "site/provision : {{ user }} : {{ site }} : generate fail2ban jail"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : generate fail2ban jail"
       template:
         src: ./templates/fail2ban_jail.j2
-        dest: "{{ path_fail2ban }}"
+        dest: "{{ site_path_fail2ban }}"
         owner: "root"
         group: "root"
         mode: "0644"
+      when: install_fail2ban
 
-    - name: "site/provision : {{ user }} : {{ site }} : reload web server"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : reload web server"
       service:
         name: lshttpd
         state: restarted
 
-    - name: "site/provision : {{ user }} : {{ site }} : reload proxy server"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : reload proxy server"
       service:
         name: caddy
         state: reloaded
 
-    - name: "site/provision : {{ user }} : {{ site }} : reload fail2ban"
+    - name: "site/provision : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:
         name: fail2ban
         state: reloaded
+      when: install_fail2ban

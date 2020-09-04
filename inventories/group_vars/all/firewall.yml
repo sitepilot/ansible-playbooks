@@ -1,0 +1,10 @@
+---
+firewall_rules:
+  - port: 80
+    comment: "http"
+  - port: 443
+    comment: "https"
+  - port: 22
+    comment: "ssh"
+  - port: 7080
+    comment: "litespeed admin"

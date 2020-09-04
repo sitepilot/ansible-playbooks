@@ -1,0 +1,15 @@
+---
+admin: "autopilot"
+admin_pass: secret
+
+server_name: "Autopilot"
+
+root_path: "/opt/{{ admin }}"
+root_domain: "autopilot.local"
+
+hostname: "server.{{ root_domain }}"
+timezone: "Europe/Amsterdam"
+
+admin_email: "server@{{ root_domain }}"
+health_email: "health@{{ root_domain }}"
+cert_email: internal

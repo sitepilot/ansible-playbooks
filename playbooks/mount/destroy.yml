@@ -1,0 +1,12 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  vars:
+    mount_path: "{{ root_path }}/users/{{ mount_user }}/sites/{{ mount_source_site }}-mnt"
+  tasks:
+    - name: "mount/destroy : unmount site '{{ mount_source_site }}' from user '{{ mount_user }}'"
+      mount:
+        path: "{{ mount_path }}"
+        state: absent

@@ -1,0 +1,6 @@
+---
+host: "server"
+mount_user: "{{ admin }}"
+mount_source_site: remote-example
+mount_source_user: remote-user
+mount_source_host: 127.0.0.1

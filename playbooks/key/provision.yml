@@ -1,0 +1,12 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "key/provision : {{ key_user }} : add key to authorized keys"
+      authorized_key:
+        user: "{{ key_user }}"
+        state: "present"
+        key: "{{ key }}"
+        comment: "{{ key_comment }}"

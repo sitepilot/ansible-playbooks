@@ -1,0 +1,19 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "database/destroy : {{ database_name }} : drop database"
+      mysql_db:
+        name: "{{ database_name }}"
+        state: "absent"
+        config_file: "/root/.my.cnf"
+
+    - name: "database/destroy : {{ database_user }} : remove database user"
+      mysql_user:
+        name: "{{ database_user }}"
+        state: "absent"
+        host: "%"
+        config_file: "/root/.my.cnf"
+      no_log: true

@@ -1,0 +1,24 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "backup/destroy : get backups from repository"
+      command: "restic -r s3:{{ backup_s3_bucket}} --tag {{ backup_tags|join(' --tag') }} snapshots --json"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ backup_s3_key }}"
+        AWS_SECRET_ACCESS_KEY: "{{ backup_s3_secret }}"
+        RESTIC_PASSWORD: "{{ backup_password }}"
+      register: snapshot_info
+
+    - set_fact:
+        snapshots: "{{ snapshot_info.stdout|from_json }}"
+
+    - name: "backup/destroy : remove backups from repository"
+      command: "restic -r s3:{{ backup_s3_bucket}} forget {{ item.id }}"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ backup_s3_key }}"
+        AWS_SECRET_ACCESS_KEY: "{{ backup_s3_secret }}"
+        RESTIC_PASSWORD: "{{ backup_password }}"
+      loop: "{{ snapshots if snapshots[0] is defined else [] }}"

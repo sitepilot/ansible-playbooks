@@ -1,0 +1,7 @@
+---
+- name: "database : validate input"
+  assert:
+    that:
+      - database_name | length >= 3
+      - database_user | length >= 3
+      - database_password | length >= 6

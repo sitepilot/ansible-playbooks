@@ -50,32 +50,35 @@
 - include: msmtp.yml
   tags: "msmtp"
 
-- include: fail2ban.yml
-  tags: "fail2ban"
-
 - include: swap.yml
   tags: "swap"
 
+# ----- Optional ----- #
+
+- include: fail2ban.yml
+  tags: "fail2ban"
+  when: install_fail2ban
+
 - include: node-exporter.yml
   tags: "node-exporter"
+  when: install_node_exporter
 
 - include: phpmyadmin.yml
   tags: "phpmyadmin"
-
-# ----- Optional ----- #
+  when: install_phpmyadmin
 
 - include: docker.yml
   tags: "docker"
-  when: docker_install
+  when: install_docker
 
 - include: wpcli.yml
   tags: "wpcli"
-  when: wpcli_install
+  when: install_wpcli
 
 - include: wordmove.yml
   tags: "wordmove"
-  when: wordmove_install
+  when: install_wordmove
 
 - include: unattended-upgrades.yml
   tags: "unattended-upgrades"
-  when: unattended_upgrades_install
+  when: install_unattended_upgrades
