@@ -5,7 +5,7 @@ virtualHost {{ site_name }} {
     listeners                 http, https
 
     vhRoot                    {{ site_path }}
-    docRoot                   $VH_ROOT/public
+    docRoot                   $VH_ROOT/{{ site_doc_root }}
 
     allowSymbolLink           1
     enableScript              1

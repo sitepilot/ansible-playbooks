@@ -1,21 +1,33 @@
 # {{ ansible_managed }}
-{{ site_domain }}{{ ', ' if (site_domains|length>0) else '' }}{{ site_domains|join(', ') }} {
+{% if site_https %}
+{{ site_domain if(site_domain != '*') else '' }}:443{{ ', ' if (site_domains|length>0) else '' }}{{ site_domains|join(':443, ') }}{{ ':443' if (site_domains|length>0) else '' }}
+{% else %}
+{{ site_domain if(site_domain != '*') else '' }}:80{{ ', ' if (site_domains|length>0) else '' }}{{ site_domains|join(':80, ') }}{{ ':80' if (site_domains|length>0) else '' }}
+{% endif %}
+{
+    {% if site_https | bool %}
     tls {{ site_email }} {
         on_demand
     }
+    {% endif %}
 
     import config
 
     import webapps
 
     reverse_proxy {
-        to {{ site_backends | join(' ') }}
+        {% if site_https | bool %}
+        to {{ site_backends | join(':6443 ') }}:6443
+        {% else %}
+        to {{ site_backends | join(':6080 ') }}:6080
+        {% endif %}
 
-        lb_policy first
         header_down -Server
 
+        {% if site_https | bool %}
         transport http {
             tls_insecure_skip_verify
         }
+        {% endif %}
     }
 }
