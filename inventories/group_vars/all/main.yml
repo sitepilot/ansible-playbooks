@@ -5,7 +5,7 @@ admin_pass: secret
 server_name: "Autopilot"
 
 root_path: "/opt/{{ admin }}"
-root_domain: "autopilot.local"
+root_domain: "autopilot.test"
 
 hostname: "server.{{ root_domain }}"
 timezone: "Europe/Amsterdam"
