@@ -1,4 +1,6 @@
 ---
+firewall_state: enabled
+
 firewall_rules:
   - port: 80
     comment: "http"
