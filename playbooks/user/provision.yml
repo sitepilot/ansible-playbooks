@@ -4,6 +4,8 @@
   pre_tasks:
     - import_tasks: validation.yml
   vars:
+    user_groups:
+      - isolated
     user_path: "/opt/{{ admin }}/users/{{ user_name }}"
   tasks:
     - name: "user/provision : {{ user_name }} : ensure 'isolated' group exists"
@@ -21,18 +23,10 @@
     - name: "user/provision : {{ user_name }} : ensure user exists"
       user:
         name: "{{ user_name }}"
-        groups: "isolated"
+        groups: "{{ user_groups|join(', ') }}"
         shell: "/bin/bash"
         password: "{{ user_password | password_hash('sha512') }}"
         comment: "{{ user_full_name if (user_full_name is defined) and (user_full_name|length > 0) else user }}"
-
-    - name: "user : {{ user_name }} : remove isolated group"
-      user:
-        name: "{{ user_name }}"
-        groups: ""
-      when:
-        - user_isolated is defined
-        - not user_isolated
 
     - name: "user/provision : {{ user_name }} : create folders"
       file:

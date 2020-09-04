@@ -11,6 +11,6 @@
       - user_password | length < 32
       - user_mysql_password | length >= 6
       - user_mysql_password | length < 32
-      - user_isolated is defined
       # optional: user_private_key
       # optional: user_public_key
+      # optional: user_groups
