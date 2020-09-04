@@ -1,1 +1,1 @@
-server ansible_user=root ansible_host=172.25.1.1 ansible_port=22 ansible_port=22 ansible_ssh_private_key_file=./docker/ssh/test_key
+server ansible_user=root ansible_host=172.25.1.1 ansible_port=22 ansible_port=22 ansible_ssh_private_key_file=../docker/ssh/test_key

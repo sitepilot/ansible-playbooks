@@ -30,32 +30,32 @@ jobs:
 
       - name: Test server playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/server/connect.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/server/provision.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/server/test.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/server/connect.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/server/provision.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/server/test.yml
 
       - name: Test user playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/user/provision.yml -e @resources/users/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/user/test.yml -e @resources/users/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/user/destroy.yml -e @resources/users/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/user/provision.yml -e @resources/users/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/user/test.yml -e @resources/users/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/user/destroy.yml -e @resources/users/example.yml
 
       - name: Test site playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/site/provision.yml -e @resources/sites/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/site/destroy.yml -e @resources/sites/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/site/provision.yml -e @resources/sites/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/site/destroy.yml -e @resources/sites/example.yml
 
       - name: Test mount playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
 
       - name: Test key playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/key/provision.yml -e @resources/keys/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/key/destroy.yml -e @resources/keys/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/key/provision.yml -e @resources/keys/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/key/destroy.yml -e @resources/keys/example.yml
 
       - name: Test database playbooks
         run: |
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/database/provision.yml -e @resources/databases/example.yml
-          ansible-playbook -i ./inventories/inventory-docker ./playbooks/database/destroy.yml -e @resources/databases/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/database/provision.yml -e @resources/databases/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/database/destroy.yml -e @resources/databases/example.yml
