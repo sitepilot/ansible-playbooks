@@ -18,7 +18,7 @@ jobs:
         run: sudo pip install ansible-lint && sudo pip install yamllint
 
       - name: Run Yaml lint on ansible folder
-        run: sudo yamllint -c tests/yamllint.yml ./
+        run: sudo yamllint -c ./yamllint.yml ./
 
       - name: Run Ansible lint on ansible folder
         run: sudo ansible-lint -v --force-color ./
