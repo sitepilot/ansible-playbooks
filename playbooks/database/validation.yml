@@ -2,6 +2,7 @@
 - name: "database : validate input"
   assert:
     that:
+      - install_mysql | bool
       - database_name | length >= 3
       - database_user | length >= 3
       - database_password | length >= 6

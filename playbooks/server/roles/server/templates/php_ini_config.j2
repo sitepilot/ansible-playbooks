@@ -14,6 +14,8 @@ opcache.memory_consumption=128
 opcache.revalidate_freq=2
 opcache.save_comments=0
 
+{% if install_smtp | bool %}
 sendmail_path=/usr/bin/msmtp -t -i
+{% endif %}
 
 disable_functions="exec,proc_open,popen,system,show_source,dl,shell_exec,passthru,proc_terminate,proc_close,proc_get_status,proc_nice,pclose,posix_kill,posix_mkfifo,posix_setpgid,posix_setsid,posix_setuid,posix_getpwuid,posix_uname"

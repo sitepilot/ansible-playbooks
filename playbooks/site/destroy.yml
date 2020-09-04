@@ -45,4 +45,4 @@
       service:
         name: fail2ban
         state: reloaded
-      when: install_fail2ban
+      when: install_fail2ban | bool

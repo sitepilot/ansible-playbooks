@@ -6,6 +6,7 @@
     - name: "server/test : connect to MySQL as admin"
       command: "mysql -u {{ admin }} -p{{ admin_pass }} -h 127.0.0.1 -e 'show databases;'"
       changed_when: false
+      when: install_mysql | bool
 
     # HTTP Checks
     - name: "server/test : caddy server is running (HTTP)"
@@ -36,7 +37,8 @@
       uri:
         url: "https://{{ hostname }}/phpmyadmin/"
         validate_certs: false
-      when: install_phpmyadmin
+      when:
+        - install_phpmyadmin | bool
 
     - name: "server/test : health check is available"
       uri:
@@ -50,7 +52,8 @@
       uri:
         url: "https://{{ hostname }}/metrics/"
         validate_certs: false
-      when: install_node_exporter
+      when:
+        - install_node_exporter | bool
 
     - name: "server/test : check if modsecurity is installed"
       uri:
@@ -65,7 +68,7 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
-      when: install_fail2ban
+      when: install_fail2ban | bool
 
     - name: "server/test : PHP 7.4 is installed"
       command: "php74 -v"
@@ -84,7 +87,7 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
-      when: install_wpcli
+      when: install_wpcli | bool
 
     - name: "server/test : Composer is installed"
       command: "composer --version"
@@ -109,7 +112,7 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
-      when: install_wordmove
+      when: install_wordmove | bool
 
     - name: "server/test : Restic is installed"
       command: "restic version"
@@ -122,4 +125,4 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
-      when: install_docker
+      when: install_docker | bool

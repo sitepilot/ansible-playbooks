@@ -9,32 +9,36 @@
     name: caddy
     state: reloaded
 
-- name: reload fail2ban
+- name: restart lshttpd
   service:
-    name: fail2ban
-    state: reloaded
+    name: lshttpd
+    state: restarted
 
 - name: reload supervisor
   service:
     name: supervisor
     state: reloaded
 
+- name: reload fail2ban
+  service:
+    name: fail2ban
+    state: reloade
+  when: install_fail2ban | bool
+
 - name: restart mysql
   service:
     name: mysql
     state: restarted
+  when: install_mysql | bool
 
 - name: restart redis
   service:
     name: redis
     state: restarted
-
-- name: restart lshttpd
-  service:
-    name: lshttpd
-    state: restarted
+  when: install_redis | bool
 
 - name: restart node-exporter
   service:
     name: node-exporter
     state: restarted
+  when: install_node_exporter | bool

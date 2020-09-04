@@ -21,14 +21,13 @@ The following packages and services will be provisioned on each server:
 * [Composer](https://getcomposer.org/)
 * [UFW (firewall)](https://help.ubuntu.com/community/UFW)
 * [OpenSSH Server & SFTP](https://www.openssh.com/)
-* [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
 * [Restic (for backups)](https://restic.net/)
-* [Redis](https://redis.io/)
-* [MySQL 8](https://hub.docker.com/_/mariadb)
 * [Bubblewrap](https://github.com/containers/bubblewrap)
 
 Optional packages (defined in `inventories/group_vars/all/install.yml`):
 
+* [Redis](https://redis.io/)
+* [MySQL 8](https://hub.docker.com/_/mariadb)
 * [Docker](https://www.docker.com/)
 * [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
 * [Unattended Upgrades](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
@@ -36,7 +35,8 @@ Optional packages (defined in `inventories/group_vars/all/install.yml`):
 * [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
 * [WPCLI](https://wp-cli.org/)
 * [WordMove](https://github.com/welaika/wordmove)
-  
+* [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
+
 ## Configuration
 
 You may override the default server configuration by creating a YAML-file in the following location: `inventory/host_vars/<inventory-server-name>/main.yml`. Copy the variables you would like to change (defined in `inventories/group_vars/all/`) to this file and change the value. Each resource (for example a site or user) is defined using a separate YAML-file in the `resources` folder.

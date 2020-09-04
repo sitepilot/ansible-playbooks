@@ -52,7 +52,7 @@
         owner: "root"
         group: "root"
         mode: "0644"
-      when: install_fail2ban
+      when: install_fail2ban | bool
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload web server"
       service:
@@ -68,4 +68,4 @@
       service:
         name: fail2ban
         state: reloaded
-      when: install_fail2ban
+      when: install_fail2ban | bool

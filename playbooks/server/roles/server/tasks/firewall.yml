@@ -9,6 +9,6 @@
     port: "{{ item.port }}"
     comment: "{{ item.comment }}"
     rule: allow
-    state: enabled
+    state: "{{ firewall_state }}"
   loop: "{{ firewall_rules }}"
   when: firewall_rules is defined

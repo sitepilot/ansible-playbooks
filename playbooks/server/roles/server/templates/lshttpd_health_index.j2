@@ -3,9 +3,15 @@
 try {
     $load = checkLoad();
 
+    {% if install_mysql | bool %}
     checkMySQL();
+    {% endif %}
+    {% if install_redis | bool %}
     checkRedis();
+    {% endif %}
+    {% if install_smtp | bool %}
     checkMail();
+    {% endif %}
     
     http_response_code(200);
     echo "[OK] - Load: $load";

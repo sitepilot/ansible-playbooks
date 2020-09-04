@@ -39,3 +39,4 @@
         config_file: "/root/.my.cnf"
         host: "%"
       no_log: true
+      when: install_mysql | bool

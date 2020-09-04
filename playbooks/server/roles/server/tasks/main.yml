@@ -35,50 +35,53 @@
 - include: nodejs.yml
   tags: "nodejs"
 
-- include: mysql.yml
-  tags: "mysql"
-
-- include: redis.yml
-  tags: "redis"
-
 - include: supervisor.yml
   tags: "supervisor"
 
 - include: restic.yml
   tags: "restic"
 
-- include: msmtp.yml
-  tags: "msmtp"
-
 - include: swap.yml
   tags: "swap"
 
 # ----- Optional ----- #
 
+- include: msmtp.yml
+  tags: "msmtp"
+  when: install_smtp | bool
+
+- include: mysql.yml
+  tags: "mysql"
+  when: install_mysql | bool
+
+- include: redis.yml
+  tags: "redis"
+  when: install_redis | bool
+
 - include: fail2ban.yml
   tags: "fail2ban"
-  when: install_fail2ban
+  when: install_fail2ban | bool
 
 - include: node-exporter.yml
   tags: "node-exporter"
-  when: install_node_exporter
+  when: install_node_exporter | bool
 
 - include: phpmyadmin.yml
   tags: "phpmyadmin"
-  when: install_phpmyadmin
+  when: install_phpmyadmin | bool
 
 - include: docker.yml
   tags: "docker"
-  when: install_docker
+  when: install_docker | bool
 
 - include: wpcli.yml
   tags: "wpcli"
-  when: install_wpcli
+  when: install_wpcli | bool
 
 - include: wordmove.yml
   tags: "wordmove"
-  when: install_wordmove
+  when: install_wordmove | bool
 
 - include: unattended-upgrades.yml
   tags: "unattended-upgrades"
-  when: install_unattended_upgrades
+  when: install_unattended_upgrades | bool

@@ -9,3 +9,4 @@
     - name: "user/test : {{ user_name }} : connect to MySQL as user"
       command: "mysql -u {{ user_name }} -p'{{ user_mysql_password }}' -h 127.0.0.1 -e 'show databases;'"
       changed_when: false
+      when: install_mysql | bool

@@ -103,6 +103,7 @@
         host: "%"
         config_file: "/root/.my.cnf"
       when:
+        - install_mysql | bool
         - user_mysql_password is defined
         - user_mysql_password | length > 0
       no_log: true
