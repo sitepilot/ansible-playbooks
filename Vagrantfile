@@ -9,6 +9,18 @@ Vagrant.configure("2") do |config|
     config.vm.provider "hyperv"
     config.vm.provider "virtualbox"
 
+    # VirtualBox config
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = "4096"
+        vb.cpus = "4"
+    end
+
+    # HyperV config
+    config.vm.provider "hyperv" do |hv|
+        hv.memory = "4096"
+        hv.cpus = "4"
+    end
+
     # Disks
     config.vm.disk :disk, name: "data", size: "100GB"
 
