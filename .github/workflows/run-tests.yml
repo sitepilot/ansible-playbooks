@@ -27,6 +27,7 @@ jobs:
         run: |
           sudo modprobe ip6table_filter
           docker-compose up -d
+          chmod 600 docker/ssh/test_key
 
       - name: Test server playbooks
         run: |
