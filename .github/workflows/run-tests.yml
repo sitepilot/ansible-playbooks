@@ -26,6 +26,8 @@ jobs:
       - name: Start test container
         run: |
           sudo modprobe ip6table_filter
+          sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
           docker-compose up -d
           chmod 600 docker/ssh/test_key
 
