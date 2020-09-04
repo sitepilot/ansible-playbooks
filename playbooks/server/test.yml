@@ -122,3 +122,4 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
+      when: install_docker
