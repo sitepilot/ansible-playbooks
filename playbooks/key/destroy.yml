@@ -1,0 +1,11 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "key/destroy : {{ key_user }} : remove key to authorized keys"
+      authorized_key:
+        user: "{{ key_user }}"
+        state: "absent"
+        key: "{{ key }}"

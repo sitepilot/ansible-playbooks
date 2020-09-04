@@ -1,0 +1,7 @@
+---
+- name: "key : validate input"
+  assert:
+    that:
+      - key | length > 24
+      - key_user | length >= 3
+      - key_comment is defined

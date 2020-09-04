@@ -1,0 +1,16 @@
+---
+- name: "user : validate input"
+  assert:
+    that:
+      - admin is defined
+      - user_name | length >= 3
+      - user_name | length < 32
+      - user_full_name | length >= 3
+      - user_full_name | length < 32
+      - user_password | length >= 6
+      - user_password | length < 32
+      - user_mysql_password | length >= 6
+      - user_mysql_password | length < 32
+      - user_isolated is defined
+      # optional: user_private_key
+      # optional: user_public_key

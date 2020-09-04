@@ -1,0 +1,4 @@
+---
+php_memory_limit: 256
+php_upload_max_filesize: 32
+php_max_children: 5

@@ -1,0 +1,13 @@
+---
+- name: "site : validate input"
+  assert:
+    that:
+      - admin | length > 3
+      - admin | length < 32
+      - site_name | length > 3
+      - site_name | length < 32
+      - site_user | length > 3
+      - site_user | length < 32
+      - site_php_version == 74 or php_version == 73
+      - site_domain is defined
+      - site_domains is defined

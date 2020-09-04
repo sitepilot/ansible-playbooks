@@ -1,0 +1,58 @@
+---
+- hosts: "all"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "backup/restore : determine backup path"
+      set_fact:
+        backup_path: "{{ root_path }}/backups/mysql/{{ backup_database_name }}.sql"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0
+
+    - name: "backup/restore : restore backup files"
+      command: "restic -r s3:{{ backup_s3_bucket}} --tag {{ backup_tags|join(' --tag') }} restore latest --target /"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ backup_s3_key }}"
+        AWS_SECRET_ACCESS_KEY: "{{ backup_s3_secret }}"
+        RESTIC_PASSWORD: "{{ backup_password }}"
+      register: restore_info
+
+    - name: "backup/restore : show restore info"
+      debug:
+        msg: "{{ restore_info.stdout }}"
+
+    - name: "backup/restore : set file permissions"
+      file:
+        path: "{{ backup_path }}"
+        owner: "{{ backup_user }}"
+        group: "{{ backup_user }}"
+        recurse: true
+      when:
+        - backup_database_name is not defined or backup_database_name | length == 0
+
+    - name: "backup/restore : import database dump"
+      mysql_db:
+        state: import
+        name: "{{ backup_database_name }}"
+        target: "{{ backup_path }}"
+        config_file: "/root/.my.cnf"
+        single_transaction: yes
+        login_host: "127.0.0.1"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0
+
+    - name: "backup/restore : remove database dump"
+      file:
+        state: absent
+        path: "{{ backup_path }}"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0
+
+    - name: "backup/restore : reload web server"
+      service:
+        name: lshttpd
+        state: restarted

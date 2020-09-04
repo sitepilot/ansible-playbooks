@@ -1,0 +1,5 @@
+---
+backup_s3_bucket: ""
+backup_s3_key: ""
+backup_s3_secret: ""
+backup_password: ""

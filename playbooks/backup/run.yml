@@ -1,0 +1,68 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "backup/run : determine backup path"
+      set_fact:
+        backup_path: "{{ root_path }}/backups/mysql/{{ backup_database_name }}.sql"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0
+
+    - name: "backup/run : create folders"
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner }}"
+        group: "{{ item.owner }}"
+        mode: "{{ item.mode }}"
+      loop:
+        - path: "{{ root_path }}/backups"
+          owner: "root"
+          mode: "0700"
+        - path: "{{ root_path }}/backups/mysql"
+          owner: "root"
+          mode: "0700"
+
+    - name: "backup/run : create database dump"
+      mysql_db:
+        state: dump
+        name: "{{ backup_database_name }}"
+        target: "{{ backup_path }}"
+        config_file: "/root/.my.cnf"
+        single_transaction: yes
+        login_host: "127.0.0.1"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0
+
+    - name: "backup/run : initialize backup repository"
+      command: "restic -r s3:{{ backup_s3_bucket}} init"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ backup_s3_key }}"
+        AWS_SECRET_ACCESS_KEY: "{{ backup_s3_secret }}"
+        RESTIC_PASSWORD: "{{ backup_password }}"
+      ignore_errors: yes
+      no_log: yes
+
+    - name: "backup/run : backup files to repository"
+      command: "restic -r s3:{{ backup_s3_bucket}} --tag {{ backup_tags|join(' --tag') }} backup {{ backup_path }}"
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ backup_s3_key }}"
+        AWS_SECRET_ACCESS_KEY: "{{ backup_s3_secret }}"
+        RESTIC_PASSWORD: "{{ backup_password }}"
+      register: backup_info
+
+    - name: "backup/run : show backup result"
+      debug:
+        msg: "{{ backup_info.stdout }}"
+
+    - name: "backup/run : remove database dump"
+      file:
+        state: absent
+        path: "{{ backup_path }}"
+      when:
+        - backup_database_name is defined
+        - backup_database_name | length > 0

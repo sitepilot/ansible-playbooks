@@ -1,0 +1,21 @@
+---
+- hosts: "{{ host }}"
+  become: true
+  pre_tasks:
+    - import_tasks: validation.yml
+  tasks:
+    - name: "database/provision : {{ database_name }} : create database"
+      mysql_db:
+        name: "{{ database_name }}"
+        state: "present"
+        config_file: "/root/.my.cnf"
+
+    - name: "database/provision : {{ database_user }} : create database user"
+      mysql_user:
+        name: "{{ database_user }}"
+        password: "{{ database_password }}"
+        priv: "{{ database_name }}.*:ALL"
+        state: present
+        host: "%"
+        config_file: "/root/.my.cnf"
+      no_log: true

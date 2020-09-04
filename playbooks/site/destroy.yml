@@ -2,54 +2,47 @@
 - hosts: "all"
   become: true
   pre_tasks:
-      - name: "site/destroy : validate input"
-        assert:
-          that: 
-            - admin | length > 3
-            - admin | length < 32
-            - user | length > 3
-            - user | length < 32
-            - site | length > 3 
-            - site | length < 32
+    - import_tasks: validation.yml
   vars:
-    path: "/opt/{{ admin }}/users/{{ user }}/sites/{{ site }}"
-    path_vhost: "/usr/local/lsws/conf/vhosts/{{ site }}.conf"
-    path_proxy: "/etc/caddy/vhosts/{{ site }}.conf"
-    path_fail2ban: "/etc/fail2ban/jail.d/{{ site }}.conf"
+    site_path: "/opt/{{ admin }}/users/{{ site_user }}/sites/{{ site_name }}"
+    site_path_vhost: "/usr/local/lsws/conf/vhosts/{{ site_name }}.conf"
+    site_path_proxy: "/etc/caddy/vhosts/{{ site_name }}.conf"
+    site_path_fail2ban: "/etc/fail2ban/jail.d/{{ site_name }}.conf"
   tasks:
-    - name: "site/destroy : {{ user }} : {{ site }} : remove site folder"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : remove site folder"
       file:
         path: "{{ item }}"
         state: absent
       loop:
-        - "{{ path }}"
+        - "{{ site_path }}"
 
-    - name: "site/destroy : {{ user }} : {{ site }} : remove vhost configuration"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : remove vhost configuration"
       file:
-        path: "{{ path_vhost }}"
+        path: "{{ site_path_vhost }}"
         state: absent
 
-    - name: "site/destroy : {{ user }} : {{ site }} : remove proxy configuration"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : remove proxy configuration"
       file:
-        path: "{{ path_proxy }}"
+        path: "{{ site_path_proxy }}"
         state: absent
 
-    - name: "site/destroy : {{ user }} : {{ site }} : remove fail2ban configuration"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : remove fail2ban configuration"
       file:
-        path: "{{ path_fail2ban }}"
+        path: "{{ site_path_fail2ban }}"
         state: absent
 
-    - name: "site/destroy : {{ user }} : {{ site }} : reload web server"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload web server"
       service:
         name: lshttpd
         state: restarted
 
-    - name: "site/destroy : {{ user }} : {{ site }} : reload proxy server"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload proxy server"
       service:
         name: caddy
         state: reloaded
 
-    - name: "site/destroy : {{ user }} : {{ site }} : reload fail2ban"
+    - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:
         name: fail2ban
         state: reloaded
+      when: install_fail2ban

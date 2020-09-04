@@ -1,0 +1,64 @@
+---
+name: run-tests
+
+on:
+  push:
+    paths-ignore:
+      - "docker/test/**"
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install pip packages
+        run: sudo pip install ansible-lint && sudo pip install yamllint
+
+      - name: Run Yaml lint on ansible folder
+        run: sudo yamllint -c ./yamllint.yml ./
+
+      - name: Run Ansible lint on ansible folder
+        run: sudo ansible-lint -v --force-color ./
+
+      - name: Start test container
+        run: |
+          sudo modprobe ip6table_filter
+          sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+          docker-compose up -d
+          chmod 600 docker/ssh/test_key
+
+      - name: Test server playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/server/connect.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/server/provision.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/server/test.yml
+
+      - name: Test user playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/user/provision.yml -e @resources/users/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/user/test.yml -e @resources/users/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/user/destroy.yml -e @resources/users/example.yml
+
+      - name: Test site playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/site/provision.yml -e @resources/sites/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/site/destroy.yml -e @resources/sites/example.yml
+
+      - name: Test mount playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
+
+      - name: Test key playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/key/provision.yml -e @resources/keys/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/key/destroy.yml -e @resources/keys/example.yml
+
+      - name: Test database playbooks
+        run: |
+          ansible-playbook -i ./inventories/docker ./playbooks/database/provision.yml -e @resources/databases/example.yml
+          ansible-playbook -i ./inventories/docker ./playbooks/database/destroy.yml -e @resources/databases/example.yml

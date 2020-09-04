@@ -1,0 +1,8 @@
+---
+- name: "mount : validate input"
+  assert:
+    that:
+      - mount_user | length > 0
+      - mount_source_site | length > 0
+      - mount_source_user | length > 0
+      - mount_source_host | length > 0

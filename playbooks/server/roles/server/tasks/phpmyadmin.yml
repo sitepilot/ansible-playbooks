@@ -9,8 +9,8 @@
     path: "{{ pma_path }}"
     state: absent
   when:
-    - pma_update_version is defined
-    - pma_update_version|bool
+    - phpmyadmin_update is defined
+    - phpmyadmin_update | bool
 
 - name: "phpmyadmin : create folders"
   file:
@@ -25,9 +25,9 @@
     path: "{{ pma_path }}/index.php"
   register: pma_index
 
-- name: "phpmyadmin : download v{{ pma_version }} archive"
+- name: "phpmyadmin : download v{{ phpmyadmin_version }} archive"
   get_url:
-    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-all-languages.tar.gz"
+    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version}}-all-languages.tar.gz"
     dest: "/tmp/phpmyadmin.zip"
   when: not pma_index.stat.exists
 

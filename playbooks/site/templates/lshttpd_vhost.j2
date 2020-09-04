@@ -1,10 +1,10 @@
 # {{ ansible_managed }}
-virtualHost {{ site }} {
-    user                      {{ user }}
-    group                     {{ user }}
+virtualHost {{ site_name }} {
+    user                      {{ site_user }}
+    group                     {{ site_user }}
     listeners                 http, https
 
-    vhRoot                    /opt/{{ admin }}/users/{{ user }}/sites/{{ site }}
+    vhRoot                    {{ site_path }}
     docRoot                   $VH_ROOT/public
 
     allowSymbolLink           1
@@ -12,19 +12,19 @@ virtualHost {{ site }} {
     restrained                1
     setUIDMode                2
 
-    vhDomain                  {{ domain }}
-    vhAliases                 {{ domains|join(', ') }}
+    vhDomain                  {{ site_domain }}
+    vhAliases                 {{ site_domains|join(', ') }}
 
     enableGzip                1
     enableIpGeo               1
     
-    errorlog /opt/{{ admin }}/users/{{ user }}/sites/{{ site }}/logs/error.log {
+    errorlog {{ site_path }}/logs/error.log {
         useServer               0
         logLevel                NOTICE
         rollingSize             0
     }
 
-    accesslog /opt/{{ admin }}/users/{{ user }}/sites/{{ site }}/logs/access.log {
+    accesslog {{ site_path }}/logs/access.log {
         useServer               0
         logFormat               %a %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"
         logHeaders              5
@@ -32,10 +32,10 @@ virtualHost {{ site }} {
     }
 
     scripthandler  {
-        add                     lsapi:lsphp{{ php_version | default('74') }} inc
-        add                     lsapi:lsphp{{ php_version | default('74') }} php
-        add                     lsapi:lsphp{{ php_version | default('74') }} phtml
-        add                     lsapi:lsphp{{ php_version | default('74') }} php74
+        add                     lsapi:lsphp{{ site_php_version | default('74') }} inc
+        add                     lsapi:lsphp{{ site_php_version | default('74') }} php
+        add                     lsapi:lsphp{{ site_php_version | default('74') }} phtml
+        add                     lsapi:lsphp{{ site_php_version | default('74') }} php74
     }
 
     phpIniOverride  {

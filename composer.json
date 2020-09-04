@@ -1,0 +1,14 @@
+{
+    "name": "sitepilot/autopilot-ansible",
+    "description": "Ansible playbooks for setting up a web server optimized for WordPress and Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sitepilot",
+            "email": "support@sitepilot.io"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
