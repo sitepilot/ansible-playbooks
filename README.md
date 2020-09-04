@@ -1,8 +1,6 @@
 # Autopilot Ansible Playbooks
 
-## Overview
-
-Ansible playbooks for setting up an optimized web server for WordPress and Laravel. These playbooks are used by Autopilot (our cloud server control panel) and are perfect for:
+Ansible playbooks for setting up an optimized web server for WordPress and Laravel. These playbooks are used by Autopilot  (our cloud server control panel) and are perfect for:
 
 * Local development environments.
 * High-performance production servers (with caching).
