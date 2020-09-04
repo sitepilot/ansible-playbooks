@@ -27,9 +27,7 @@ The following packages and services will be provisioned on each server:
 * [MySQL 8](https://hub.docker.com/_/mariadb)
 * [Bubblewrap](https://github.com/containers/bubblewrap)
 
-### Optional
-
-Optional packages are defined in `inventories/group_vars/all/install.yml`.
+Optional packages (defined in `inventories/group_vars/all/install.yml`):
 
 * [Docker](https://www.docker.com/)
 * [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
@@ -41,13 +39,13 @@ Optional packages are defined in `inventories/group_vars/all/install.yml`.
   
 ## Configuration
 
-You may override the default server configuration by creating a YAML-file in the following location: `inventory/host_vars/<inventory-server-name>/main.yml`. Copy the variables (defined in `inventories/group_vars/all/`) you would like to change to this file and change the value. Each resource (for example a site or user) is defined using a separate YAML-file in the `resources` folder.
+You may override the default server configuration by creating a YAML-file in the following location: `inventory/host_vars/<inventory-server-name>/main.yml`. Copy the variables you would like to change (defined in `inventories/group_vars/all/`) to this file and change the value. Each resource (for example a site or user) is defined using a separate YAML-file in the `resources` folder.
 
 ## Playbooks
 
 ### Server
 
-Provision the server.
+Provision and test the server.
 
 ```bash
 # Test server connection playbook: 
@@ -77,7 +75,7 @@ ansible-playbook -i <inventory-file> ./playbooks/user/destroy.yml -e @resources/
 
 ### Site
 
-Provision a site using the variables defined in `resources/users/example.yml`.
+Provision a site using the variables defined in `resources/sites/example.yml`.
 
 ```bash
 # Provision site playbook: 
@@ -87,21 +85,9 @@ ansible-playbook -i <inventory-file> ./playbooks/site/provision.yml -e @resource
 ansible-playbook -i <inventory-file> ./playbooks/site/destroy.yml -e @resources/sites/example.yml
 ```
 
-### Site Mount
-
-Provision a site mount using the variables defined in `resources/mounts/example.yml`. This will create an entry in `/etc/fstab` for mounting a site on a remote server using SSHFS.
-
-```bash
-# Provision sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
-
-# Destroy sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
-```
-
 ### SSH Key
 
-Provision a ssh key using the variables defined in `resources/keys/example.yml`. Adds a public ssh key to the `authorized_keys` file of a system user.
+Adds a public ssh key to the `authorized_keys` file of a system user using the variables defined in `resources/keys/example.yml`.
 
 ```bash
 # Provision ssh key playbook: 
@@ -109,6 +95,18 @@ ansible-playbook -i <inventory-file> ./playbooks/key/provision.yml -e @resources
 
 # Destroy ssh key playbook: 
 ansible-playbook -i <inventory-file> ./playbooks/key/destroy.yml -e @resources/keys/example.yml
+```
+
+### Site Mount
+
+Provision a site mount using the variables defined in `resources/mounts/example.yml`. This will create an entry in `/etc/fstab` for mounting a site on a remote server using SSHFS. Run `mount <site_name>-mnt` with the user specified in `mount_user` to mount the directory. Please note that the user's public key needs to be provisioned to the user specified in `mount_source_user`.
+
+```bash
+# Provision sshfs site mount playbook: 
+ansible-playbook -i <inventory-file> ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
+
+# Destroy sshfs site mount playbook: 
+ansible-playbook -i <inventory-file> ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
 ```
 
 ### Database
