@@ -8,11 +8,13 @@
   service:
     name: caddy
     state: reloaded
+  when: install_webserver | bool
 
 - name: restart lshttpd
   service:
     name: lshttpd
     state: restarted
+  when: install_webserver | bool
 
 - name: reload supervisor
   service:

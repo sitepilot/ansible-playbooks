@@ -17,26 +17,17 @@
 - include: firewall.yml
   tags: "firewall"
 
-- include: lshttpd.yml
-  tags: "lshttpd"
-
 - include: lsphp73.yml
   tags: "lsphp73"
 
 - include: lsphp74.yml
   tags: "lsphp74"
 
-- include: caddy.yml
-  tags: "caddy"
-
 - include: composer.yml
   tags: "composer"
 
 - include: nodejs.yml
   tags: "nodejs"
-
-- include: supervisor.yml
-  tags: "supervisor"
 
 - include: restic.yml
   tags: "restic"
@@ -46,9 +37,17 @@
 
 # ----- Optional ----- #
 
-- include: msmtp.yml
-  tags: "msmtp"
-  when: install_smtp | bool
+- include: lshttpd.yml
+  tags: "lshttpd"
+  when: install_webserver | bool
+
+- include: caddy.yml
+  tags: "caddy"
+  when: install_webserver | bool
+
+- include: supervisor.yml
+  tags: "supervisor"
+  when: install_supervisor | bool
 
 - include: mysql.yml
   tags: "mysql"
@@ -61,6 +60,10 @@
 - include: fail2ban.yml
   tags: "fail2ban"
   when: install_fail2ban | bool
+
+- include: msmtp.yml
+  tags: "msmtp"
+  when: install_smtp | bool
 
 - include: node-exporter.yml
   tags: "node-exporter"
