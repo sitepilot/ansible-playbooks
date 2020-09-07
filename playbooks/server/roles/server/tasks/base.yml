@@ -21,7 +21,6 @@
       - nano
       - ntpdate
       - rsyslog
-      - bubblewrap
     state: present
     update_cache: yes
 

@@ -18,6 +18,7 @@
     pkg:
       - openlitespeed
       - ols-modsecurity
+      - bubblewrap
     state: present
     update_cache: yes
   notify: restart lshttpd
