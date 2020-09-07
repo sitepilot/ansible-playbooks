@@ -18,24 +18,24 @@ The following packages and services will be provisioned on each server:
 * [OpenLitespeed (web server)](https://www.litespeedtech.com/open-source/openlitespeed)
 * [LSPHP 7.4](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
 * [LSPHP 7.3](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
-* [Composer](https://getcomposer.org/)
+* [Redis](https://redis.io/)
+* [MySQL 8](https://hub.docker.com/_/mariadb)
+* [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
+* [Supervisor](http://supervisord.org/)
+* [Docker](https://www.docker.com/)
 * [UFW (firewall)](https://help.ubuntu.com/community/UFW)
 * [OpenSSH Server & SFTP](https://www.openssh.com/)
 * [Restic (for backups)](https://restic.net/)
 * [Bubblewrap](https://github.com/containers/bubblewrap)
-
-Optional packages (defined in `inventories/group_vars/all/install.yml`):
-
-* [Redis](https://redis.io/)
-* [MySQL 8](https://hub.docker.com/_/mariadb)
-* [Docker](https://www.docker.com/)
-* [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
-* [Unattended Upgrades](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
+* [Composer](https://getcomposer.org/)
 * [phpMyAdmin](https://www.phpmyadmin.net/)
-* [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
 * [WPCLI](https://wp-cli.org/)
 * [WordMove](https://github.com/welaika/wordmove)
 * [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
+* [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
+* [Unattended Upgrades](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
+
+Take a look at `inventory/group_vars/install.yml` to see a list of packages and services you can disable during provisioning.
 
 ## Configuration
 
