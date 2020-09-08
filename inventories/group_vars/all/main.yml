@@ -13,3 +13,5 @@ timezone: "Europe/Amsterdam"
 admin_email: "server@{{ root_domain }}"
 health_email: "health@{{ root_domain }}"
 cert_email: internal
+
+docker_network_name: "autopilot"

@@ -2,10 +2,8 @@
 - name: "mysql : install packages"
   apt:
     pkg:
-      - mysql-server
+      - mysql-client
     state: present
-    update_cache: no
-  notify: restart mysql
 
 - name: "mysql : install python packages"
   pip:
@@ -14,28 +12,38 @@
   loop:
     - PyMySQL
 
-- name: "mysql : generate mysqld configuration"
+- name: "mysql : create service folders"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - path: /opt/sitepilot/services
+      mode: "0700"
+      owner: "root"
+    - path: /opt/sitepilot/services/mysql
+      mode: "0700"
+      owner: "root"
+    - path: /opt/sitepilot/services/mysql/data
+      mode: "0700"
+      owner: "1001"
+
+- name: "mysql : generate Docker Compose configuration"
   template:
-    src: mysql_mysqld_config.j2
-    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify: restart mysql
+    src: mysql_docker_compose.j2
+    dest: /opt/sitepilot/services/mysql/docker-compose.yml
+    mode: "0600"
 
-- name: "mysql : enable on startup"
-  service:
-    name: mysql
-    enabled: true
-    state: started
+- name: "mysql : start containers"
+  docker_compose:
+    project_src: /opt/sitepilot/services/mysql
 
-- name: "mysql : set root user password"
-  mysql_user:
-    name: root
-    password: "{{ mysql_root_pass }}"
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-    update_password: always
-  no_log: true
+- name: "mysql : check if .my.cnf file exists for 'root' user"
+  stat:
+    path: "/root/.my.cnf"
+  register: root_my_cnf
 
 - name: "mysql : copy .my.cnf file with root password credentials"
   template:
@@ -47,23 +55,7 @@
   vars:
     mysql_user: root
     mysql_password: "{{ mysql_root_pass }}"
-
-- name: "mysql : delete anonymous MySQL server users"
-  mysql_user:
-    user: ""
-    host: "{{ item }}"
-    state: absent
-  no_log: true
-  with_items:
-    - "%"
-    - 127.0.0.1
-    - ::1
-    - localhost
-
-- name: "mysql : remove the test database"
-  mysql_db:
-    name: test
-    state: absent
+  when: not root_my_cnf.stat.exists
 
 - name: "mysql : ensure '{{ admin }}' user has admin rights"
   mysql_user:

@@ -36,3 +36,7 @@
     name: "{{ admin }}"
     groups: docker
     append: true
+
+- name: "docker : create default overlay network"
+  docker_network:
+    name: "{{ docker_network_name }}"

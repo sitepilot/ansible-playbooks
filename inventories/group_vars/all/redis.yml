@@ -1,0 +1,2 @@
+---
+redis_image: bitnami/redis:6.0-debian-10

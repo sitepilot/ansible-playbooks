@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+version: '3.3'
+
+services:
+
+  redis-1:
+    image: {{ redis_image }}
+    container_name: redis-1
+    restart: always
+    ports:
+      - '127.0.0.1:6379:6379'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    volumes:
+      - /opt/sitepilot/services/redis/data/:/bitnami/redis/data
+
+networks:
+  default:
+    external:
+      name: {{ docker_network_name }}
