@@ -25,18 +25,6 @@
     state: reloaded
   when: install_fail2ban | bool
 
-- name: restart mysql
-  service:
-    name: mysql
-    state: restarted
-  when: install_mysql | bool
-
-- name: restart redis
-  service:
-    name: redis
-    state: restarted
-  when: install_redis | bool
-
 - name: restart node-exporter
   service:
     name: node-exporter
