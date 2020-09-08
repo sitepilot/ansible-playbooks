@@ -56,4 +56,3 @@
       service:
         name: lshttpd
         state: restarted
-      when: install_webserver | bool

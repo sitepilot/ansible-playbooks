@@ -35,13 +35,11 @@
       service:
         name: lshttpd
         state: restarted
-      when: install_webserver | bool
 
     - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload proxy server"
       service:
         name: caddy
         state: reloaded
-      when: install_webserver | bool
 
     - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:

@@ -17,6 +17,12 @@
 - include: firewall.yml
   tags: "firewall"
 
+- include: lshttpd.yml
+  tags: "lshttpd"
+
+- include: caddy.yml
+  tags: "caddy"
+
 - include: lsphp73.yml
   tags: "lsphp73"
 
@@ -37,13 +43,9 @@
 
 # ----- Optional ----- #
 
-- include: lshttpd.yml
-  tags: "lshttpd"
-  when: install_webserver | bool
-
-- include: caddy.yml
-  tags: "caddy"
-  when: install_webserver | bool
+- include: docker.yml
+  tags: "docker"
+  when: install_docker | bool
 
 - include: supervisor.yml
   tags: "supervisor"
@@ -72,10 +74,6 @@
 - include: phpmyadmin.yml
   tags: "phpmyadmin"
   when: install_phpmyadmin | bool
-
-- include: docker.yml
-  tags: "docker"
-  when: install_docker | bool
 
 - include: wpcli.yml
   tags: "wpcli"
