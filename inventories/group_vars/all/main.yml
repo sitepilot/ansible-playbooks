@@ -14,4 +14,6 @@ admin_email: "server@{{ root_domain }}"
 health_email: "health@{{ root_domain }}"
 cert_email: internal
 
+ssh_authorized_addresses: []
+
 docker_network_name: "autopilot"
