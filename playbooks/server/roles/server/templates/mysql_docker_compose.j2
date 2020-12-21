@@ -11,7 +11,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
-      - /opt/sitepilot/services/mysql/data/:/bitnami/mariadb
+      - {{ root_path }}/services/mysql/data/:/bitnami/mariadb
     healthcheck:
       test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
       interval: 15s

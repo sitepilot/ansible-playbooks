@@ -13,7 +13,7 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     volumes:
-      - /opt/sitepilot/services/redis/data/:/bitnami/redis/data
+      - {{ root_path }}/services/redis/data/:/bitnami/redis/data
 
 networks:
   default:

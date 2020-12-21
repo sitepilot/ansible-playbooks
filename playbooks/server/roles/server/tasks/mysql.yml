@@ -20,25 +20,25 @@
     state: directory
     mode: "{{ item.mode }}"
   loop:
-    - path: /opt/sitepilot/services
+    - path: "{{ root_path }}/services"
       mode: "0700"
       owner: "root"
-    - path: /opt/sitepilot/services/mysql
+    - path:  "{{ root_path }}/services/mysql"
       mode: "0700"
       owner: "root"
-    - path: /opt/sitepilot/services/mysql/data
+    - path: "{{ root_path }}/services/mysql/data"
       mode: "0700"
       owner: "1001"
 
 - name: "mysql : generate Docker Compose configuration"
   template:
     src: mysql_docker_compose.j2
-    dest: /opt/sitepilot/services/mysql/docker-compose.yml
+    dest: "{{ root_path }}//services/mysql/docker-compose.yml"
     mode: "0600"
 
 - name: "mysql : start containers"
   docker_compose:
-    project_src: /opt/sitepilot/services/mysql
+    project_src: "{{ root_path }}/services/mysql"
 
 - name: "mysql : check if .my.cnf file exists for 'root' user"
   stat:
