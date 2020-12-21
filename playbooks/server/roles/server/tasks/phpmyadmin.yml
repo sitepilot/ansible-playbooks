@@ -1,52 +1,25 @@
 ---
-- name: "phpmyadmin : prepare variables"
-  set_fact:
-    pma_path: "{{ root_path }}/users/{{ admin }}/sites/default/public/phpmyadmin"
-    pma_blowfish_secret: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters') }}"
-
-- name: "phpmyadmin : remove folders"
+- name: "phpmyadmin : create service folders"
   file:
-    path: "{{ pma_path }}"
-    state: absent
-  when:
-    - phpmyadmin_update is defined
-    - phpmyadmin_update | bool
-
-- name: "phpmyadmin : create folders"
-  file:
-    path: "{{ pma_path }}"
-    owner: "{{ admin }}"
-    group: "{{ admin }}"
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
     state: directory
-    mode: "0755"
-
-- name: "phpmyadmin : check if already installed"
-  stat:
-    path: "{{ pma_path }}/index.php"
-  register: pma_index
-
-- name: "phpmyadmin : download v{{ phpmyadmin_version }} archive"
-  get_url:
-    url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version}}-all-languages.tar.gz"
-    dest: "/tmp/phpmyadmin.zip"
-  when: not pma_index.stat.exists
-
-- name: "phpmyadmin : extract phpMyAdmin archive"
-  unarchive:
-    src: /tmp/phpmyadmin.zip
-    dest: "{{ pma_path }}"
-    remote_src: true
-    extra_opts: [--strip-components=1]
-  when: not pma_index.stat.exists
-
-- name: "phpmyadmin : write configuration"
-  template:
-    src: pma_config.j2
-    dest: "{{ pma_path }}/config.inc.php"
-  when: not pma_index.stat.exists
-
-- name: "phpmyadmin : set folder / file permissions"
-  command: "{{ item }}"
+    mode: "{{ item.mode }}"
   loop:
-    - "find {{ pma_path }} -type f -exec chmod 644 {} +"
-    - "find {{ pma_path }} -type d -exec chmod 755 {} +"
+    - path: "{{ root_path }}/services"
+      mode: "0700"
+      owner: "root"
+    - path: "{{ root_path }}/services/phpmyadmin"
+      mode: "0700"
+      owner: "root"
+
+- name: "phpmyadmin : generate Docker Compose configuration"
+  template:
+    src: phpmyadmin_docker_compose.j2
+    dest: "{{ root_path }}/services/phpmyadmin/docker-compose.yml"
+    mode: "0600"
+
+- name: "phpmyadmin : start containers"
+  docker_compose:
+    project_src: "{{ root_path }}/services/phpmyadmin"

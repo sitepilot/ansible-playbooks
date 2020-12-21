@@ -6,7 +6,6 @@ install_fail2ban: true
 install_phpmyadmin: true
 install_node_exporter: true
 install_wpcli: true
-install_wordmove: true
 install_unattended_upgrades: true
 install_docker: true
 install_smtp: true

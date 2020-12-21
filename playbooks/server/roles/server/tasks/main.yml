@@ -79,10 +79,6 @@
   tags: "wpcli"
   when: install_wpcli | bool
 
-- include: wordmove.yml
-  tags: "wordmove"
-  when: install_wordmove | bool
-
 - include: unattended-upgrades.yml
   tags: "unattended-upgrades"
   when: install_unattended_upgrades | bool

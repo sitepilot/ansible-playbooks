@@ -30,7 +30,6 @@ The following packages and services will be provisioned on each server:
 * [Composer](https://getcomposer.org/)
 * [phpMyAdmin](https://www.phpmyadmin.net/)
 * [WPCLI](https://wp-cli.org/)
-* [WordMove](https://github.com/welaika/wordmove)
 * [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
 * [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
 * [Unattended Upgrades](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
