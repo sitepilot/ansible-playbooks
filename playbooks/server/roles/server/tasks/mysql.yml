@@ -23,7 +23,7 @@
     - path: "{{ root_path }}/services"
       mode: "0700"
       owner: "root"
-    - path:  "{{ root_path }}/services/mysql"
+    - path: "{{ root_path }}/services/mysql"
       mode: "0700"
       owner: "root"
     - path: "{{ root_path }}/services/mysql/data"
