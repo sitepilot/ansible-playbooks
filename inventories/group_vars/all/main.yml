@@ -2,7 +2,7 @@
 admin: "captain"
 admin_pass: "secret"
 
-root_path: "/opt/sitepilot"
+root_path: "/opt/autopilot"
 
 timezone: "Europe/Amsterdam"
 hostname: "n10.autopilot.test"

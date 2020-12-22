@@ -23,7 +23,7 @@
 - name: "lsphp73 : generate ini configuration"
   template:
     src: php_ini_config.j2
-    dest: "/usr/local/lsws/lsphp73/etc/php/7.3/mods-available/10-sitepilot.ini"
+    dest: "/usr/local/lsws/lsphp73/etc/php/7.3/mods-available/10-autopilot.ini"
     owner: "root"
     group: "root"
     mode: "0644"
