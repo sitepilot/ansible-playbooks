@@ -6,7 +6,7 @@
   vars:
     user_groups:
       - isolated
-    user_path: "/opt/{{ admin }}/users/{{ user_name }}"
+    user_path: "{{ root_path }}/users/{{ user_name }}"
   tasks:
     - name: "user/provision : {{ user_name }} : ensure 'isolated' group exists"
       group:

@@ -4,7 +4,7 @@
   pre_tasks:
     - import_tasks: validation.yml
   vars:
-    site_path: "/opt/{{ admin }}/users/{{ site_user }}/sites/{{ site_name }}"
+    site_path: "{{ root_path }}/users/{{ site_user }}/sites/{{ site_name }}"
     site_path_vhost: "/usr/local/lsws/conf/vhosts/{{ site_name }}.conf"
     site_path_proxy: "/etc/caddy/vhosts/{{ site_name }}.conf"
     site_path_fail2ban: "/etc/fail2ban/jail.d/{{ site_name }}.conf"

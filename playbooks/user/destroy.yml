@@ -4,7 +4,7 @@
   pre_tasks:
     - import_tasks: validation.yml
   vars:
-    user_path: "/opt/{{ admin }}/users/{{ user_name }}"
+    user_path: "{{ root_path }}/users/{{ user_name }}"
   tasks:
     - name: "user/destroy : {{ user_name }} : install required pip packages"
       pip:
