@@ -2,7 +2,7 @@
 - name: "admin : ensure '{{ admin }}' user exists"
   user:
     name: "{{ admin }}"
-    password: "{{ admin_pass | password_hash('sha512') }}"
+    password: "{{ admin_password | password_hash('sha512') }}"
     groups: sudo,www-data
 
 - name: "admin : setup bash for '{{ admin }}'"

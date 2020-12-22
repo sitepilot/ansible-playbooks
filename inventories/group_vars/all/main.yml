@@ -1,6 +1,6 @@
 ---
 admin: "captain"
-admin_pass: "secret"
+admin_password: "secret"
 
 root_path: "/opt/autopilot"
 

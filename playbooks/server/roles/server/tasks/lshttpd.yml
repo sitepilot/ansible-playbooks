@@ -114,7 +114,7 @@
     mode: "a+x"
 
 - name: "lshttpd : set admin password"
-  command: "/root/lshttpd-password.sh {{ admin }} {{ admin_pass }}"
+  command: "/root/lshttpd-password.sh {{ admin }} {{ admin_password }}"
   changed_when: false
 
 - name: "lshttpd : generate reload script"

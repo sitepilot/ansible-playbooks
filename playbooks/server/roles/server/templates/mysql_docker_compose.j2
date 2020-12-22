@@ -7,7 +7,7 @@ services:
     container_name: mysql-1
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: "{{ mysql_root_pass }}"
+      MARIADB_ROOT_PASSWORD: "{{ mysql_password }}"
     ports:
       - '3306:3306'
     volumes:

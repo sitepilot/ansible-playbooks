@@ -4,7 +4,7 @@
   tasks:
     # MySQL Tests
     - name: "server/test : connect to MySQL as admin"
-      command: "mysql -u {{ admin }} -p{{ admin_pass }} -h 127.0.0.1 -e 'show databases;'"
+      command: "mysql -u {{ admin }} -p{{ admin_password }} -h 127.0.0.1 -e 'show databases;'"
       changed_when: false
       when: install_mysql | bool
 
