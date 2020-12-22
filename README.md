@@ -96,18 +96,6 @@ ansible-playbook -i <inventory-file> ./playbooks/key/provision.yml -e @resources
 ansible-playbook -i <inventory-file> ./playbooks/key/destroy.yml -e @resources/keys/example.yml
 ```
 
-### Site Mount
-
-Provision a site mount using the variables defined in `resources/mounts/example.yml`. This will create an entry in `/etc/fstab` for mounting a site on a remote server using SSHFS. Run `mount <site_name>-mnt` with the user specified in `mount_user` to mount the directory. Please note that the user's public key needs to be provisioned to the user specified in `mount_source_user`.
-
-```bash
-# Provision sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
-
-# Destroy sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
-```
-
 ### Database
 
 Provision a database and database user using the variables defined in `resources/databases/example.yml`.
@@ -147,7 +135,7 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 ## Web Apps
 
 * phpMyAdmin: `https://<hostname>/-/phpmyadmin/`.
-* Health check: `https://<hostname>/-/health/`.
+* Health Check: `https://<hostname>/-/health/`.
 * Node Exporter: `https://<hostname>/-/metrics/`.
 
 ## Filesystem
