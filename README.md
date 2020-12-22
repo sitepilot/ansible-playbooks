@@ -145,10 +145,6 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 * Site public folder: `/home/{{ user_name }}/sites/{{ site_name }}/public`.
 * Site logs folder: `/home/{{ user_name }}/sites/{{ site_name }}/logs`.
 
-## License
-
-MIT / BSD
-
 ## Author
 
 Autopilot was created in 2020 by [Nick Jansen](https://nbejansen.com/).
