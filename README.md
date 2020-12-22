@@ -1,6 +1,6 @@
 # Autopilot Ansible Playbooks
 
-Ansible playbooks for setting up an optimized web server for WordPress and Laravel. These playbooks are used by Autopilot  (our cloud server control panel) and are perfect for:
+Ansible playbooks for provisioning optimized web servers for WordPress and Laravel. These playbooks are used by Autopilot (our cloud server control panel) and are perfect for:
 
 * Local development environments.
 * High-performance production servers (with caching).
@@ -18,8 +18,8 @@ The following packages and services will be provisioned on each server:
 * [OpenLitespeed (web server)](https://www.litespeedtech.com/open-source/openlitespeed)
 * [LSPHP 7.4](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
 * [LSPHP 7.3](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
-* [Redis](https://redis.io/)
-* [MySQL 8](https://hub.docker.com/_/mariadb)
+* [Redis](https://hub.docker.com/r/bitnami/redis)
+* [MySQL 8](https://hub.docker.com/r/bitnami/mysql)
 * [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
 * [Supervisor](http://supervisord.org/)
 * [Docker](https://www.docker.com/)
@@ -28,9 +28,8 @@ The following packages and services will be provisioned on each server:
 * [Restic (for backups)](https://restic.net/)
 * [Bubblewrap](https://github.com/containers/bubblewrap)
 * [Composer](https://getcomposer.org/)
-* [phpMyAdmin](https://www.phpmyadmin.net/)
+* [phpMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 * [WPCLI](https://wp-cli.org/)
-* [WordMove](https://github.com/welaika/wordmove)
 * [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
 * [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
 * [Unattended Upgrades](https://help.ubuntu.com/community/AutomaticSecurityUpdates)
@@ -97,18 +96,6 @@ ansible-playbook -i <inventory-file> ./playbooks/key/provision.yml -e @resources
 ansible-playbook -i <inventory-file> ./playbooks/key/destroy.yml -e @resources/keys/example.yml
 ```
 
-### Site Mount
-
-Provision a site mount using the variables defined in `resources/mounts/example.yml`. This will create an entry in `/etc/fstab` for mounting a site on a remote server using SSHFS. Run `mount <site_name>-mnt` with the user specified in `mount_user` to mount the directory. Please note that the user's public key needs to be provisioned to the user specified in `mount_source_user`.
-
-```bash
-# Provision sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
-
-# Destroy sshfs site mount playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
-```
-
 ### Database
 
 Provision a database and database user using the variables defined in `resources/databases/example.yml`.
@@ -147,9 +134,9 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 
 ## Web Apps
 
-* phpMyAdmin: `https://<hostname>/phpmyadmin/`.
-* Health check: `https://<hostname>/health/`.
-* Node Exporter: `https://<hostname>/metrics/`.
+* phpMyAdmin: `https://<hostname>/-/phpmyadmin/`.
+* Health Check: `https://<hostname>/-/health/`.
+* Node Exporter: `https://<hostname>/-/metrics/`.
 
 ## Filesystem
 
@@ -157,11 +144,6 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 * OpenLitespeed vhosts folder: `/usr/local/lsws/conf/vhosts`.
 * Site public folder: `/home/{{ user_name }}/sites/{{ site_name }}/public`.
 * Site logs folder: `/home/{{ user_name }}/sites/{{ site_name }}/logs`.
-* Default vhost folder for server index page, health & phpMyAdmin: `/home/{{ admin }}/sites/default/public`
-
-## License
-
-MIT / BSD
 
 ## Author
 

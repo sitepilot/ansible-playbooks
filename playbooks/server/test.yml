@@ -35,14 +35,14 @@
 
     - name: "server/test : phpMyAdmin is available"
       uri:
-        url: "https://{{ hostname }}/phpmyadmin/"
+        url: "https://{{ hostname }}/-/phpmyadmin/"
         validate_certs: false
       when:
         - install_phpmyadmin | bool
 
     - name: "server/test : health check is available"
       uri:
-        url: "https://{{ hostname }}/health/"
+        url: "https://{{ hostname }}/-/health/"
         status_code:
           - 200
           - 500
@@ -50,7 +50,7 @@
 
     - name: "server/test : node-exporter is available"
       uri:
-        url: "https://{{ hostname }}/metrics/"
+        url: "https://{{ hostname }}/-/metrics/"
         validate_certs: false
       when:
         - install_node_exporter | bool
@@ -106,13 +106,6 @@
       become: true
       become_user: "{{ admin }}"
       changed_when: false
-
-    - name: "server/test : Wordmove is installed"
-      command: "wordmove --version"
-      become: true
-      become_user: "{{ admin }}"
-      changed_when: false
-      when: install_wordmove | bool
 
     - name: "server/test : Restic is installed"
       command: "restic version"

@@ -15,13 +15,3 @@ services:
       - "8070:7080"
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    networks:
-      testing_net:
-        ipv4_address: ${TEST_WEB_IP:-172.25.1.1}
-
-networks:
-  testing_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.25.0.0/16

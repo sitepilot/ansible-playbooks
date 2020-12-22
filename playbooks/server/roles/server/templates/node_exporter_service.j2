@@ -8,7 +8,7 @@ After=network-online.target
 User={{ admin }}
 Group={{ admin }}
 Type=simple
-ExecStart=/usr/local/bin/node_exporter --web.telemetry-path="/metrics/"
+ExecStart=/usr/local/bin/node_exporter --web.telemetry-path="/-/metrics/"
 
 [Install]
 WantedBy=multi-user.target

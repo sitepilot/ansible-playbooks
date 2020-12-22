@@ -119,7 +119,6 @@ extprocessor lsphp73 {
     address                 uds://tmp/lshttpd/lsphp73.sock
     maxConns                {{ php_max_children }}
     env                     PHP_LSAPI_CHILDREN={{ php_max_children }}
-    env                     LSAPI_AVOID_FORK=200M
     initTimeout             60
     retryTimeout            0
     persistConn             1
@@ -140,7 +139,6 @@ extprocessor lsphp74 {
     address                 uds://tmp/lshttpd/lsphp74.sock
     maxConns                {{ php_max_children }}
     env                     PHP_LSAPI_CHILDREN={{ php_max_children }}
-    env                     LSAPI_AVOID_FORK=200M
     initTimeout             60
     retryTimeout            0
     persistConn             1

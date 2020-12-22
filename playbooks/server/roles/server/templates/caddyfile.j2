@@ -1,10 +1,13 @@
 # {{ ansible_managed }}
 (config) {
-	header Server "{{ server_name }}"
+	header Server "Sitepilot"
 }
 
 (webapps) {
-	# nothing here yet
+    route /-/phpmyadmin* {
+        uri strip_prefix /-/phpmyadmin
+        reverse_proxy http://127.0.0.1:3001
+    }
 }
 
 {{ hostname }} localhost {
@@ -16,7 +19,9 @@
 
     import webapps
 
-    reverse_proxy /metrics* http://127.0.0.1:9100
+    route /-/metrics* {
+        reverse_proxy http://127.0.0.1:9100
+    }
 
 	reverse_proxy {
         to https://127.0.0.1:6443

@@ -38,7 +38,6 @@
         owner: "lsadm"
         group: "nogroup"
         mode: "0644"
-      when: install_webserver | bool
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : generate proxy vhost"
       template:
@@ -47,7 +46,6 @@
         owner: "caddy"
         group: "caddy"
         mode: "0644"
-      when: install_webserver | bool
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : generate fail2ban jail"
       template:
@@ -62,13 +60,11 @@
       service:
         name: lshttpd
         state: restarted
-      when: install_webserver | bool
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload proxy server"
       service:
         name: caddy
         state: reloaded
-      when: install_webserver | bool
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:

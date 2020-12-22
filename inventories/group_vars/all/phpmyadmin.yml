@@ -1,3 +1,2 @@
 ---
-phpmyadmin_version: 5.0.2
-phpmyadmin_update: true
+phpmyadmin_image: phpmyadmin:5

@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+version: '3.3'
+
+services:
+  phpmyadmin-1:
+    image: {{ phpmyadmin_image }}
+    container_name: phpmyadmin-1
+    restart: always
+    ports:
+      - '127.0.0.1:3001:80'
+    environment:
+      - PMA_HOST=mysql-1
+
+networks:
+  default:
+    external:
+      name: {{ docker_network_name }}

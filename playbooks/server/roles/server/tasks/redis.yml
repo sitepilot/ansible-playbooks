@@ -1,14 +1,28 @@
 ---
-- name: "redis : install packages"
-  apt:
-    pkg:
-      - redis-server
-    state: present
-    update_cache: no
-  notify: restart redis
+- name: "redis : create service folders"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ root_path }}/services"
+      mode: "0700"
+      owner: "root"
+    - path: "{{ root_path }}/services/redis"
+      mode: "0700"
+      owner: "root"
+    - path: "{{ root_path }}/services/redis/data"
+      mode: "0700"
+      owner: "1001"
 
-- name: "redis : enable on startup"
-  service:
-    name: redis
-    enabled: true
-    state: started
+- name: "redis : generate Docker Compose configuration"
+  template:
+    src: redis_docker_compose.j2
+    dest: "{{ root_path }}/services/redis/docker-compose.yml"
+    mode: "0600"
+
+- name: "redis : start containers"
+  docker_compose:
+    project_src: "{{ root_path }}/services/redis"

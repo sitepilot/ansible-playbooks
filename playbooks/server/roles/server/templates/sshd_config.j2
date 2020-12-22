@@ -121,7 +121,7 @@ Subsystem       sftp    /usr/lib/openssh/sftp-server
 
 PasswordAuthentication no
 
-Match Group isolated
+Match Group isolated Address *{{ ssh_authorized_addresses | map('regex_replace', '^(.*)$', ',!\\1') | join }}
     ChrootDirectory {{ root_path }}/users/%u
     X11Forwarding no
     AllowTcpForwarding no
