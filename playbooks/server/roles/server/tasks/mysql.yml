@@ -53,8 +53,8 @@
     group: root
     mode: 0600
   vars:
-    mysql_user: root
-    mysql_password: "{{ mysql_password }}"
+    mysql_my_user: root
+    mysql_my_password: "{{ mysql_password }}"
   when: not root_my_cnf.stat.exists
 
 - name: "mysql : ensure '{{ admin }}' user has admin rights"
