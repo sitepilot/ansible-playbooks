@@ -48,11 +48,6 @@ jobs:
           ansible-playbook -i ./inventories/docker ./playbooks/site/provision.yml -e @resources/sites/example.yml
           ansible-playbook -i ./inventories/docker ./playbooks/site/destroy.yml -e @resources/sites/example.yml
 
-      - name: Test mount playbooks
-        run: |
-          ansible-playbook -i ./inventories/docker ./playbooks/mount/provision.yml -e @resources/mounts/example.yml
-          ansible-playbook -i ./inventories/docker ./playbooks/mount/destroy.yml -e @resources/mounts/example.yml
-
       - name: Test key playbooks
         run: |
           ansible-playbook -i ./inventories/docker ./playbooks/key/provision.yml -e @resources/keys/example.yml
