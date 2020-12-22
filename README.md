@@ -1,6 +1,6 @@
 # Autopilot Ansible Playbooks
 
-Ansible playbooks for setting up an optimized web server for WordPress and Laravel. These playbooks are used by Autopilot  (our cloud server control panel) and are perfect for:
+Ansible playbooks for provisioning optimized web servers for WordPress and Laravel. These playbooks are used by Autopilot (our cloud server control panel) and are perfect for:
 
 * Local development environments.
 * High-performance production servers (with caching).
@@ -18,8 +18,8 @@ The following packages and services will be provisioned on each server:
 * [OpenLitespeed (web server)](https://www.litespeedtech.com/open-source/openlitespeed)
 * [LSPHP 7.4](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
 * [LSPHP 7.3](https://www.litespeedtech.com/open-source/litespeed-sapi/php)
-* [Redis](https://redis.io/)
-* [MySQL 8](https://hub.docker.com/_/mariadb)
+* [Redis](https://hub.docker.com/r/bitnami/redis)
+* [MySQL 8](https://hub.docker.com/r/bitnami/mysql)
 * [Fail2Ban](https://en.wikipedia.org/wiki/Fail2ban)
 * [Supervisor](http://supervisord.org/)
 * [Docker](https://www.docker.com/)
@@ -28,7 +28,7 @@ The following packages and services will be provisioned on each server:
 * [Restic (for backups)](https://restic.net/)
 * [Bubblewrap](https://github.com/containers/bubblewrap)
 * [Composer](https://getcomposer.org/)
-* [phpMyAdmin](https://www.phpmyadmin.net/)
+* [phpMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 * [WPCLI](https://wp-cli.org/)
 * [MSMTP (email relay)](https://wiki.archlinux.org/index.php/msmtp)
 * [Node Exporter (for monitoring)](https://prometheus.io/docs/guides/node-exporter/)
@@ -146,9 +146,9 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 
 ## Web Apps
 
-* phpMyAdmin: `https://<hostname>/phpmyadmin/`.
-* Health check: `https://<hostname>/health/`.
-* Node Exporter: `https://<hostname>/metrics/`.
+* phpMyAdmin: `https://<hostname>/-/phpmyadmin/`.
+* Health check: `https://<hostname>/-/health/`.
+* Node Exporter: `https://<hostname>/-/metrics/`.
 
 ## Filesystem
 
@@ -156,7 +156,6 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 * OpenLitespeed vhosts folder: `/usr/local/lsws/conf/vhosts`.
 * Site public folder: `/home/{{ user_name }}/sites/{{ site_name }}/public`.
 * Site logs folder: `/home/{{ user_name }}/sites/{{ site_name }}/logs`.
-* Default vhost folder for server index page, health & phpMyAdmin: `/home/{{ admin }}/sites/default/public`
 
 ## License
 
