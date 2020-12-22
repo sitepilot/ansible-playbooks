@@ -48,8 +48,8 @@ function checkMySQL()
 function checkRedis()
 {
     $client = new TinyRedisClient('127.0.0.1:6379');
-    $client->set('{{ admin }}_redis_check', 'OK');
-    $value = $client->get('{{ admin }}_redis_check');
+    $client->set('health_redis_check', 'OK');
+    $value = $client->get('health_redis_check');
 
     if ($value != "OK") {
         throw new Exception("Could not connect to Redis server.");
@@ -78,8 +78,8 @@ function checkLoad()
 function checkMail()
 {
     $client = new TinyRedisClient('127.0.0.1:6379');
-    $lastState = $client->get('{{ admin }}_mail_check_state');
-    $lastCheck = $client->get('{{ admin }}_mail_check_timestamp');
+    $lastState = $client->get('health_mail_check_state');
+    $lastCheck = $client->get('health_mail_check_timestamp');
 
     if (((time() - $lastCheck) > 3600) || $lastState == "NOK") {
         $from = "health@{{ hostname }}";
@@ -89,13 +89,13 @@ function checkMail()
         $message = "This is a test to check if php mail function sends out the email.";
         $headers = "From:" . $from;
 
-        $client->set('{{ admin }}_mail_check_timestamp', time());
+        $client->set('health_mail_check_timestamp', time());
 
         if (!mail($to, $subject, $message, $headers)) {
-            $client->set('{{ admin }}_mail_check_state', 'NOK');
+            $client->set('health_mail_check_state', 'NOK');
             throw new Exception("Could not send email.");
         } else {
-            $client->set('{{ admin }}_mail_check_state', 'OK');
+            $client->set('health_mail_check_state', 'OK');
         }
     }
 }
