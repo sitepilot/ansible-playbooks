@@ -1,1 +1,1 @@
-test ansible_user=vagrant ansible_host=192.168.25.25 ansible_port=22 ansible_ssh_private_key_file=./.vagrant/machines/default/virtualbox/private_key
+server ansible_user=vagrant ansible_host=192.168.25.25 ansible_port=22 ansible_ssh_private_key_file=./.vagrant/machines/default/virtualbox/private_key
