@@ -10,6 +10,7 @@ services:
       - '127.0.0.1:3001:80'
     environment:
       - PMA_HOST=mysql-1
+      - PMA_ABSOLUTE_URI=/-/phpmyadmin/
 
 networks:
   default:
