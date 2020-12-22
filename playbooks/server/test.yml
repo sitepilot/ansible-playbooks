@@ -42,7 +42,7 @@
 
     - name: "server/test : health check is available"
       uri:
-        url: "https://{{ hostname }}/health/"
+        url: "https://{{ hostname }}/-/health/"
         status_code:
           - 200
           - 500

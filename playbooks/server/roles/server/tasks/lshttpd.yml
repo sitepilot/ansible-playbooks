@@ -73,7 +73,10 @@
     - path: "{{ root_path }}/users/{{ admin }}/sites/default/public"
       mode: "0750"
       owner: "{{ admin }}"
-    - path: "{{ root_path }}/users/{{ admin }}/sites/default/public/health"
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default/public/-"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "{{ root_path }}/users/{{ admin }}/sites/default/public/-/health"
       mode: "0750"
       owner: "{{ admin }}"
     - path: "{{ root_path }}/users/{{ admin }}/sites/default/logs"
@@ -99,7 +102,7 @@
 - name: "lshttpd : generate health index page"
   template:
     src: lshttpd_health_index.j2
-    dest: "{{ root_path }}/users/{{ admin }}/sites/default/public/health/index.php"
+    dest: "{{ root_path }}/users/{{ admin }}/sites/default/public/-/health/index.php"
     owner: "{{ admin }}"
     group: "{{ admin }}"
     mode: "0644"
