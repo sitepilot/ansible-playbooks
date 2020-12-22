@@ -15,4 +15,3 @@ services:
       - "8070:7080"
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-
