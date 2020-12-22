@@ -79,5 +79,5 @@
     group: "{{ admin }}"
     mode: "0600"
   vars:
-    mysql_user: "{{ admin }}"
-    mysql_password: "{{ admin_password }}"
+    mysql_my_user: "{{ admin }}"
+    mysql_my_password: "{{ admin_password }}"
