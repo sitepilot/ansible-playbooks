@@ -1,2 +1,3 @@
 ---
 redis_image: bitnami/redis:6.0-debian-10
+redis_password: "supersecret"
