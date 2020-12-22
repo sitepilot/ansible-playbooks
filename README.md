@@ -59,29 +59,29 @@ ansible-playbook -i <inventory-file> ./playbooks/server/test.yml
 
 ### User
 
-Provision a system user using the variables defined in `resources/users/example.yml`. System users are isolated and allowed to use SFTP with password authentication (chroot directory `{{ root_path }}/users/%u/sites`).
+Provision a system user using the variables defined in `resources/test/users/example.yml`. System users are isolated and allowed to use SFTP with password authentication (chroot directory `{{ root_path }}/users/%u/sites`).
 
 ```bash
 # Provision user playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/user/provision.yml -e @resources/users/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/user/provision.yml -e @resources/test/users/example.yml
 
 # Test user playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/user/test.yml -e @resources/users/test.yml
+ansible-playbook -i <inventory-file> ./playbooks/user/test.yml -e @resources/test/users/test.yml
 
 # Destroy user playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/user/destroy.yml -e @resources/users/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/user/destroy.yml -e @resources/test/users/example.yml
 ```
 
 ### Site
 
-Provision a site using the variables defined in `resources/sites/example.yml`.
+Provision a site using the variables defined in `resources/test/sites/example.yml`.
 
 ```bash
 # Provision site playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/site/provision.yml -e @resources/sites/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/site/provision.yml -e @resources/test/sites/example.yml
 
 # Destroy site playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/site/destroy.yml -e @resources/sites/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/site/destroy.yml -e @resources/test/sites/example.yml
 ```
 
 ### SSH Key
@@ -90,46 +90,46 @@ Adds a public ssh key to the `authorized_keys` file of a system user using the v
 
 ```bash
 # Provision ssh key playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/key/provision.yml -e @resources/keys/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/key/provision.yml -e @resources/test/keys/example.yml
 
 # Destroy ssh key playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/key/destroy.yml -e @resources/keys/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/key/destroy.yml -e @resources/test/keys/example.yml
 ```
 
 ### Database
 
-Provision a database and database user using the variables defined in `resources/databases/example.yml`.
+Provision a database and database user using the variables defined in `resources/test/databases/example.yml`.
 
 ```bash
 # Provision database playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/database/provision.yml -e @resources/databases/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/database/provision.yml -e @resources/test/databases/example.yml
 
 #Destroy database playbook: 
-ansible-playbook -i <inventory-file> ./playbooks/database/destroy.yml -e @resources/databases/example.yml
+ansible-playbook -i <inventory-file> ./playbooks/database/destroy.yml -e @resources/test/databases/example.yml
 ```
 
 ### Backup
 
-Create a file or database backup using the variables defined in `resources/backups/example.yml`.
+Create a file or database backup using the variables defined in `resources/test/backups/example.yml`.
 
 ```bash
 # Run a database backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/run.yml -e @resources/backups/example-database.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/run.yml -e @resources/test/backups/example-database.yml
 
 # Run a file backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/run.yml -e @resources/backups/example-file.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/run.yml -e @resources/test/backups/example-file.yml
 
 # Restore a database backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/restore.yml -e @resources/backups/example-database.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/restore.yml -e @resources/test/backups/example-database.yml
 
 # Restore a file backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/restore.yml -e @resources/backups/example-file.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/restore.yml -e @resources/test/backups/example-file.yml
 
 # Destroy a database backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resources/backups/example-database.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resources/test/backups/example-database.yml
 
 # Destroy a file backup: 
-ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resources/backups/example-file.yml
+ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resources/test/backups/example-file.yml
 ```
 
 ## Web Apps
@@ -147,4 +147,4 @@ ansible-playbook -i <inventory-file> ./playbooks/backup/destroy.yml -e @resource
 
 ## Author
 
-Autopilot was created in 2020 by [Nick Jansen](https://nbejansen.com/).
+These playbooks are developed and maintained by [Nick Jansen](https://nbejansen.com/).
