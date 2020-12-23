@@ -23,14 +23,15 @@
       debug:
         msg: "{{ restore_info.stdout }}"
 
-    - name: "backup/restore : set file permissions"
-      file:
-        path: "{{ backup_path }}"
-        owner: "{{ backup_user }}"
-        group: "{{ backup_user }}"
-        recurse: true
+    - name: "backup/restore : drop database"
+      mysql_db:
+        state: absent
+        name: "{{ backup_database_name }}"
+        config_file: "/root/.my.cnf"
+        login_host: "127.0.0.1"
       when:
-        - backup_database_name is not defined or backup_database_name | length == 0
+        - backup_database_name is defined
+        - backup_database_name | length > 0
 
     - name: "backup/restore : import database dump"
       mysql_db:
