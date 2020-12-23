@@ -15,7 +15,7 @@ opcache.revalidate_freq=2
 opcache.save_comments=0
 
 {% if install_smtp | bool %}
-sendmail_path=/usr/bin/msmtp -t -i
+sendmail_path=/usr/bin/msmtp --read-envelope-from -t
 {% endif %}
 
 disable_functions="popen,system,show_source,dl,passthru,pclose,posix_kill,posix_mkfifo,posix_setpgid,posix_setsid,posix_setuid,posix_getpwuid,posix_uname"
