@@ -10,7 +10,6 @@
     site_doc_root: "public"
     site_path: "{{ root_path }}/users/{{ site_user }}/sites/{{ site_name }}"
     site_path_vhost: "/usr/local/lsws/conf/vhosts/{{ site_name }}.conf"
-    site_path_proxy: "/etc/caddy/vhosts/{{ site_name }}.conf"
     site_path_fail2ban: "/etc/fail2ban/jail.d/{{ site_name }}.conf"
   tasks:
     - name: "site/provision : {{ site_user }} : {{ site_name }} : create folders"
@@ -39,14 +38,6 @@
         group: "nogroup"
         mode: "0644"
 
-    - name: "site/provision : {{ site_user }} : {{ site_name }} : generate proxy vhost"
-      template:
-        src: ./templates/caddy_proxy_vhost.j2
-        dest: "{{ site_path_proxy }}"
-        owner: "caddy"
-        group: "caddy"
-        mode: "0644"
-
     - name: "site/provision : {{ site_user }} : {{ site_name }} : generate fail2ban jail"
       template:
         src: ./templates/fail2ban_jail.j2
@@ -60,11 +51,6 @@
       service:
         name: lshttpd
         state: restarted
-
-    - name: "site/provision : {{ site_user }} : {{ site_name }} : reload proxy server"
-      service:
-        name: caddy
-        state: reloaded
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:
