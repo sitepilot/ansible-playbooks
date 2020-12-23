@@ -1,5 +1,4 @@
 ---
 smtp_relay_host: "smtp.eu.mailgun.org"
-smtp_relay_domain: "mg.{{ hostname }}"
 smtp_relay_user: "postmaster@{{ hostname }}"
 smtp_relay_password: "supersecret"
