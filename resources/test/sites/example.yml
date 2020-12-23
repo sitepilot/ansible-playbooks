@@ -4,5 +4,4 @@ site_name: example
 site_user: "{{ admin }}"
 site_domain: example.test
 site_domains: []
-site_email: internal
 site_php_version: 74
