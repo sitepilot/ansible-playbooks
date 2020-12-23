@@ -8,4 +8,3 @@
       - backup_password is defined
       - backup_tags is defined
       - backup_path is defined or backup_database_name is defined
-      - backup_user is defined
