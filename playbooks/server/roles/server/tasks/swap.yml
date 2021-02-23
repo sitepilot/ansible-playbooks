@@ -13,6 +13,7 @@
   args:
     creates: "{{ swap_path }}"
   register: swap_file_create
+  ignore_errors: true # ToDo: can't run swapon on all filesystems
 
 - name: "swap : set permissions on swap file"
   file:
@@ -27,12 +28,12 @@
   when:
     - swap_file_create is changed
   register: mkswap_result
-  ignore_errors: true # Can't run swapon when filesystem type is btrfs
+  ignore_errors: true # ToDo: can't run swapon on all filesystems
 
 - name: "swap : run swapon on the swap file"
   command: swapon {{ swap_path }}
   when: mkswap_result is changed
-  ignore_errors: true # Can't run swapon when filesystem type is btrfs
+  ignore_errors: true # ToDo: can't run swapon on all filesystems
 
 - name: "swap : set swappiness"
   sysctl:
@@ -40,7 +41,7 @@
     value: "30"
     state: present
   when: mkswap_result is changed
-  ignore_errors: true # Can't change swappiness when running in Docker container
+  ignore_errors: true # ToDo: can't change swappiness when running in Docker container
 
 - name: "swap : set cache pressure"
   sysctl:
@@ -48,4 +49,4 @@
     value: "50"
     state: present
   when: mkswap_result is changed
-  ignore_errors: true # Can't change swappiness when running in Docker container
+  ignore_errors: true # ToDo: can't change swappiness when running in Docker container
