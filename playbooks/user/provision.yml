@@ -28,7 +28,7 @@
         password: "{{ user_password | password_hash('sha512') }}"
         comment: "{{ user_full_name if (user_full_name is defined) and (user_full_name|length > 0) else user }}"
 
-    - name: "user/provision : {{ user_name }} : create folders"
+    - name: "user/provision : {{ user_name }} : create root owned folders"
       file:
         path: "{{ item.path }}"
         state: directory
@@ -39,14 +39,8 @@
         - path: "{{ user_path }}"
           owner: "root"
           mode: "0750"
-        - path: "{{ user_path }}/sites"
-          owner: "{{ user_name }}"
-          mode: "0750"
-        - path: "/home/{{ user_name }}/.ssh/"
-          owner: "{{ user_name }}"
-          mode: "0700"
 
-    - name: "user : {{ user_name }} : setup ACL"
+    - name: "user : {{ user_name }} : setup ACL for root owned folders"
       acl:
         path: "{{ user_path }}"
         entity: "{{ item.entity }}"
@@ -66,11 +60,21 @@
           permissions: rx
           default: yes
           recursive: no
-    #       - entity: "{{ admin }}" # allow admin group to read files
-    #         etype: group
-    #         permissions: rx
-    #         default: no
-    #         recursive: yes
+
+    - name: "user/provision : {{ user_name }} : create user owned folders"
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "{{ item.owner }}"
+        group: "{{ item.owner }}"
+        mode: "{{ item.mode }}"
+      loop:
+        - path: "{{ user_path }}/sites"
+          owner: "{{ user_name }}"
+          mode: "0750"
+        - path: "/home/{{ user_name }}/.ssh/"
+          owner: "{{ user_name }}"
+          mode: "0700"
 
     - name: "user/provision : {{ user_name }} : create symlink to sites folder"
       file:

@@ -9,7 +9,7 @@
   command: "chsh -s /bin/bash {{ admin }}"
   changed_when: false
 
-- name: "admin : create folders"
+- name: "admin : create root owned folders"
   file:
     path: "{{ item.path }}"
     owner: "{{ item.owner }}"
@@ -20,14 +20,8 @@
     - path: "{{ root_path }}/users/{{ admin }}"
       mode: "0750"
       owner: "root"
-    - path: "{{ root_path }}/users/{{ admin }}/sites"
-      mode: "0750"
-      owner: "{{ admin }}"
-    - path: "/home/{{ admin }}/.ssh"
-      mode: "0700"
-      owner: "{{ admin }}"
 
-- name: "admin : setup ACL"
+- name: "admin : setup ACL for root owned folders"
   acl:
     path: "{{ root_path }}/users/{{ admin }}"
     entity: "{{ item.entity }}"
@@ -42,11 +36,21 @@
       permissions: rx
       default: yes
       recursive: no
-#    - entity: "{{ admin }}" # allow admin group to read files
-#      etype: group
-#      permissions: rx
-#      default: no
-#      recursive: yes
+
+- name: "admin : create user folders"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.owner }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ root_path }}/users/{{ admin }}/sites"
+      mode: "0750"
+      owner: "{{ admin }}"
+    - path: "/home/{{ admin }}/.ssh"
+      mode: "0700"
+      owner: "{{ admin }}"
 
 - name: "admin : create symlink to sites folder"
   file:
