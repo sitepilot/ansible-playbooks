@@ -59,18 +59,18 @@
         - entity: "{{ user_name }}" # allow user to read files
           etype: group
           permissions: rx
-          default: no
+          default: yes
           recursive: no
-        - entity: "{{ admin }}" # allow admin group to read files
-          etype: group
-          permissions: rx
-          default: no
-          recursive: yes
         - entity: "{{ admin }}"
           etype: group
           permissions: rx
           default: yes
-          recursive: yes
+          recursive: no
+    #       - entity: "{{ admin }}" # allow admin group to read files
+    #         etype: group
+    #         permissions: rx
+    #         default: no
+    #         recursive: yes
 
     - name: "user/provision : {{ user_name }} : create symlink to sites folder"
       file:
