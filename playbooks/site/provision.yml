@@ -50,7 +50,7 @@
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload web server"
       service:
         name: lshttpd
-        state: restarted
+        state: reloaded
 
     - name: "site/provision : {{ site_user }} : {{ site_name }} : reload fail2ban"
       service:
