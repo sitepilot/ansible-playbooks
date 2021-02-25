@@ -39,7 +39,7 @@ virtualHost {{ site_name }} {
     }
 
     phpIniOverride  {
-        php_admin_value open_basedir "$VH_ROOT"
+        php_admin_value open_basedir "$VH_ROOT:/tmp"
         php_admin_value mail.log "$VH_ROOT/logs/php-mail.log"
         php_admin_value error_log "$VH_ROOT/logs/php-error.log"
     }
