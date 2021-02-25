@@ -34,7 +34,7 @@
     - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload web server"
       service:
         name: lshttpd
-        state: restarted
+        state: reloaded
 
     - name: "site/destroy : {{ site_user }} : {{ site_name }} : reload proxy server"
       service:

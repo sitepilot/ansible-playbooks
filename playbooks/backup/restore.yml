@@ -56,4 +56,4 @@
     - name: "backup/restore : reload web server"
       service:
         name: lshttpd
-        state: restarted
+        state: reloaded
